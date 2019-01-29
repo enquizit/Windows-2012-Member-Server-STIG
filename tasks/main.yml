@@ -1,15 +1,46 @@
 ---
-- name: Include the preliminary tasks
-  include_tasks: prelim.yml
+- name: Check OS version and family
+  # https://www.prajwaldesai.com/windows-operating-system-version-numbers/
+  assert:
+      that: ansible_os_family == 'Windows' and ansible_distribution_major_version | version_compare('6.2', '>=')
+      msg: "This role is valid against Windows 2008 or newer. {{ ansible_os_family }} {{ ansible_distribution_major_version }} is not supported."
   tags:
-      - prelim_tasks
       - always
+
+# - name: Check ansible version
+  # assert:
+      # that: ansible_version.full | version_compare(rhel6stig_min_ansible_version, '>=')
+      # msg: You must use Ansible {{ rhel6stig_min_ansible_version }} or greater
+  # tags:
+      # - always
+
+# - name: Include the preliminary tasks
+  # import_tasks: prelim.yml
+  # tags:
+      # - prelim_tasks
+      # - always
 
 - name: Execute the category 1 (highest severity) tasks
   include_tasks: cat1.yml
+  when: apply_cat1 | bool
+  tags:
+      - cat1
+      - high
 
 - name: Execute the category 2 (medium severity) tasks
   include_tasks: cat2.yml
+  when: apply_cat2 | bool
+  tags:
+      - cat2
+      - medium
 
 - name: Execute the category 3 (lowest severity) tasks
   include_tasks: cat3.yml
+  when: apply_cat3 | bool
+  tags:
+      - cat3
+      - low
+
+# - import_tasks: post.yml
+  # tags:
+      # - post_tasks
