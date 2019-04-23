@@ -3,20 +3,24 @@
   register: supported_pack_level_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in supported_pack_level_audit.stderr and supported_pack_level_audit.stderr"
+  failed_when:
+    - supported_pack_level_audit.stderr
+    - cREG_NOT_FOUND in supported_pack_level_audit.stderr
   tags:
       - cat1
       - high
       - audit
       - V-1073
 
-# need to include certificate update information
+# TODO need to identify scan engine and database version
 - name: "HIGH | V-1074 | AUDIT | An approved DoD antivirus program must be installed and used."
-  win_command: reg query \"HKLM\Software\Wow6432Node\Network Associates\ePolicy Orchestrator\Application Plugins\VIRUSCAN8800\" /v Version
+  win_reg_stat:
+    path: HKLM:\Software\Wow6432Node\Network Associates\ePolicy Orchestrator\Application Plugins\VIRUSCAN*
   register: mcafee_approved_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in mcafee_approved_audit.stderr and mcafee_approved_audit.stderr"
+  failed_when:
+    - mcafee_approved_audit.exists == False
   tags:
       - cat1
       - high
@@ -35,11 +39,17 @@
       - V-1081
 
 - name: "HIGH | V-1093 | AUDIT | Anonymous enumeration of shares will be restricted."
-  win_command: reg query HKLM\System\CurrentControlSet\Control\Lsa /v RestrictAnonymous
+#  win_command: reg query HKLM\System\CurrentControlSet\Control\Lsa /v RestrictAnonymous
+  win_reg_stat:
+    path: HKLM:\System\CurrentControlSet\Control\Lsa
+    name: RestrictAnonymous
   register: anon_shares_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in anon_shares_audit.stderr and anon_shares_audit.stderr"
+  failed_when:
+    - anon_shares_audit.exists == False
+#    - anon_shares_audit.stderr
+#    - cREG_NOT_FOUND in anon_shares_audit.stderr 
   tags:
       - cat1
       - high
@@ -51,7 +61,7 @@
       key: 'HKLM:\System\CurrentControlSet\Control\Lsa'
       value: RestrictAnonymous
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -67,26 +77,33 @@
       - high
       - audit
       - V-1102
+      - fixme
 
 - name: "HIGH | V-1102 | PATCH | Unauthorized accounts must not have the Act as part of the operating system user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeTcbPrivilege
       value: ''
   register: secedit
-  failed_when: "secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg"
+  failed_when:
+    - secedit.failed is defined
+    - "'This host is joined to a Domain Controller' not in secedit.msg"
   tags:
       - cat1
       - high
       - patch
       - V-1102
+      - fixme
 
+#FIXME description doesn't remotely match test
 - name: "HIGH | V-1121 | AUDIT | Installed FTP server will not be configured to allow access to the system drive."
   win_shell: (Get-Service -name *ftpsvc).Status
   register: ftp_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "ftp_service_audit.stderr and service_not_found not in ftp_service_audit.stderr"
+  failed_when:
+    - ftp_service_audit.stderr
+    - cSERVICE_NOT_FOUND in ftp_service_audit.stderr
   tags:
       - cat1
       - high
@@ -146,22 +163,30 @@
       - audit
       - V-1127
 
+FIXME what if 'winreg' not exist? Test looks bogus.
 - name: "HIGH | V-1152 | AUDIT | Anonymous access to the registry must be restricted."
-  win_shell: Get-Acl -PATH 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg' | Format-List
+  win_shell: Get-Acl -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg' | Format-List
   register: anon_registry_access_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in anon_registry_access_audit.stderr and anon_registry_access_audit.stderr"
+  failed_when:
+    - anon_registry_access_audit.stderr
+    - cPATH_NOT_FOUND in anon_registry_access_audit.stderr
   tags:
       - cat1
       - high
       - audit
       - V-1152
 
+FIXME use win_regedit to create the folder and then perms, use a 'block' for compound statement
+#Permissions: 
+#Set 'Administrators'  to 'Full Control'
+#Set 'Local Service' to 'Read'
+# https://support.microsoft.com/en-us/help/314837/how-to-manage-remote-access-to-the-registry
 - name: "HIGH | V-1152 | PATCH | Anonymous access to the registry must be restricted."
   win_regedit:
       key: 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg'
-  when: "reg_not_found not in anon_registry_access_audit.stderr and anon_registry_access_audit.stderr"
+  when: cREG_NOT_FOUND not in anon_registry_access_audit.stderr and anon_registry_access_audit.stderr
   tags:
       - cat1
       - high
@@ -173,7 +198,7 @@
   register: anon_registry_access_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in anon_registry_access_audit.stderr and anon_registry_access_audit.stderr"
+  failed_when: cPATH_NOT_FOUND not in anon_registry_access_audit.stderr and anon_registry_access_audit.stderr
   tags:
       - cat1
       - high
@@ -192,7 +217,7 @@
           state: 'absent'
       when: "'Administrators' not in item[0] or 'allow' not in item[1]"
       with_nested:
-          - "{{ anon_registry_access_audit.stdout_lines }}"
+          - anon_registry_access_audit.stdout_lines
           - [ allow, deny ]
 
     - name: "HIGH | V-1152 | PATCH | Admin Anonymous access to the registry must be restricted."
@@ -223,7 +248,7 @@
           path: 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg'
           state: 'absent'
 
-  when: "path_not_found not in anon_registry_access_audit.stderr and anon_registry_access_audit"
+  when: cPATH_NOT_FOUND not in anon_registry_access_audit.stderr and anon_registry_access_audit
   tags:
       - cat1
       - high
@@ -236,7 +261,7 @@
   register: lanMan_authentication_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in lanMan_authentication_audit.stderr and lanMan_authentication_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in lanMan_authentication_audit.stderr and lanMan_authentication_audit.stderr
   tags:
       - cat1
       - high
@@ -248,7 +273,7 @@
       key: 'HKLM:\System\CurrentControlSet\Control\Lsa'
       value: LMCompatibilityLevel
       data: 5
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -260,7 +285,7 @@
   register: recovery_prevent_autologin_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in recovery_prevent_autologin_audit.stderr and recovery_prevent_autologin_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in recovery_prevent_autologin_audit.stderr and recovery_prevent_autologin_audit.stderr
   tags:
       - cat1
       - high
@@ -272,7 +297,7 @@
       key: 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole\'
       value: SecurityLevel
       data: 0
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -284,7 +309,7 @@
   register: autoplay_disabled_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in autoplay_disabled_audit.stderr and autoplay_disabled_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in autoplay_disabled_audit.stderr and autoplay_disabled_audit.stderr
   tags:
       - cat1
       - high
@@ -296,7 +321,7 @@
       key: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\Explorer\'
       value: NoDriveTypeAutoRun
       data: 255
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -314,12 +339,12 @@
       - V-3337
 
 - name: "HIGH | V-3337 | PATCH | Anonymous SID/Name translation will not be allowed."
-  win_secedit:
-      category: 'System Access'
+  win_security_policy:
+      section: 'System Access'
       key: LSAAnonymousNameLookup
       value: '0'
   register: secedit
-  failed_when: "secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg"
+  failed_when: secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg
   tags:
       - cat1
       - high
@@ -331,13 +356,14 @@
   register: pipes_limited_dc_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in pipes_limited_dc_audit.stderr and pipes_limited_dc_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in pipes_limited_dc_audit.stderr and pipes_limited_dc_audit.stderr
   tags:
       - cat1
       - high
       - audit
       - V-3338
 
+#FIXME use win_registry?
 - name: "HIGH | V-3338 | PATCH | Named pipes that can be accessed anonymously must be configured with limited values on domain controllers."
   win_command: reg add HKLM\System\CurrentControlSet\Services\LanManServer\Parameters /v NullSessionPipes /t REG_MULTI_SZ /f
   tags:
@@ -351,7 +377,9 @@
   register: remotely_accessible_registry_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in remotely_accessible_registry_audit.stderr and remotely_accessible_registry_audit.stderr"
+  failed_when: 
+    - cREG_NOT_FOUND not in remotely_accessible_registry_audit.stderr
+    - remotely_accessible_registry_audit.stderr
   tags:
       - cat1
       - high
@@ -363,7 +391,7 @@
       key: 'HKLM:\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths'
       value: Machine
       data: "System\\CurrentControlSet\\Control\\ProductOptions\0System\\CurrentControlSet\\Control\\Server Applications\0Software\\Microsoft\\Windows NT\\CurrentVersion"
-      datatype: multistring
+      type: multistring
   tags:
       - cat1
       - high
@@ -375,7 +403,7 @@
   register: null_session_shares_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in null_session_shares_audit.stderr and null_session_shares_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in null_session_shares_audit.stderr and null_session_shares_audit.stderr
   tags:
       - cat1
       - high
@@ -395,7 +423,7 @@
   register: solicited_remote_assistance_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in solicited_remote_assistance_audit.stderr and solicited_remote_assistance_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in solicited_remote_assistance_audit.stderr and solicited_remote_assistance_audit.stderr
   tags:
       - cat1
       - high
@@ -407,7 +435,7 @@
       key: 'HKLM:\Software\Policies\Microsoft\Windows NT\Terminal Services'
       value: fAllowToGetHelp
       data: 0
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -419,7 +447,7 @@
   register: blankpass_network_restriction_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in blankpass_network_restriction_audit.stderr and blankpass_network_restriction_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in blankpass_network_restriction_audit.stderr and blankpass_network_restriction_audit.stderr
   tags:
       - cat1
       - high
@@ -432,7 +460,7 @@
       key: 'HKLM:\System\CurrentControlSet\Control\Lsa\'
       value: LimitBlankPasswordUse
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -444,7 +472,7 @@
   register: prevent_lanman_storage_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in prevent_lanman_storage_audit.stderr and prevent_lanman_storage_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in prevent_lanman_storage_audit.stderr and prevent_lanman_storage_audit.stderr
   tags:
       - cat1
       - high
@@ -456,7 +484,7 @@
       key: 'HKLM:\System\CurrentControlSet\Control\Lsa'
       value: NoLMHash
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -468,7 +496,7 @@
   register: unauthorized_remote_registry_paths_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in unauthorized_remote_registry_paths_audit.stderr and unauthorized_remote_registry_paths_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in unauthorized_remote_registry_paths_audit.stderr and unauthorized_remote_registry_paths_audit.stderr
   tags:
       - cat1
       - high
@@ -490,7 +518,7 @@
             System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration\0\
             System\\CurrentControlSet\\Services\\Eventlog\0\
             System\\CurrentControlSet\\Services\\Sysmonlog"
-      datatype: multistring
+      type: multistring
   tags:
       - cat1
       - high
@@ -502,7 +530,7 @@
   register: anon_access_pipes_shares_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in anon_access_pipes_shares_audit.stderr and anon_access_pipes_shares_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in anon_access_pipes_shares_audit.stderr and anon_access_pipes_shares_audit.stderr
   tags:
       - cat1
       - high
@@ -514,7 +542,7 @@
       key: 'HKLM:\System\CurrentControlSet\Services\LanManServer\Parameters\'
       value: RestrictNullSessAccess
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -545,12 +573,12 @@
 # Well-known security identifiers in Windows operating systems
 # https://support.microsoft.com/en-us/kb/243330
 - name: "HIGH | V-18010 | PATCH | Unauthorized accounts must not have the Debug programs user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeDebugPrivilege
       value: '*S-1-5-32-544' # Administrators group
   register: secedit
-  failed_when: "secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg"
+  failed_when: secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg
   tags:
       - cat1
       - high
@@ -562,7 +590,7 @@
   register: autoplay_nonvolume_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in autoplay_nonvolume_audit.stderr and autoplay_nonvolume_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in autoplay_nonvolume_audit.stderr and autoplay_nonvolume_audit.stderr
   tags:
       - cat1
       - high
@@ -574,7 +602,7 @@
       key: 'HKLM:\Software\Policies\Microsoft\Windows\Explorer\'
       value: NoAutoplayfornonVolume
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -585,7 +613,7 @@
   register: autorun_prevent_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in autorun_prevent_audit.stderr and autorun_prevent_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in autorun_prevent_audit.stderr and autorun_prevent_audit.stderr
   tags:
       - cat1
       - high
@@ -597,7 +625,7 @@
       key: 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\'
       value: NoAutorun
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -609,7 +637,7 @@
   register: standard_user_read_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in standard_user_read_audit.stderr and standard_user_read_audit.stderr"
+  failed_when: cPATH_NOT_FOUND not in standard_user_read_audit.stderr and standard_user_read_audit.stderr
   tags:
       - cat1
       - high
@@ -621,7 +649,7 @@
   register: standard_user_read_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in standard_user_read_audit.stderr and standard_user_read_audit.stderr"
+  failed_when: cPATH_NOT_FOUND not in standard_user_read_audit.stderr and standard_user_read_audit.stderr
   tags:
       - cat1
       - high
@@ -679,7 +707,7 @@
           path: 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon'
           state: absent
 
-  when: "path_not_found not in standard_user_read_audit.stderr and standard_user_read_audit"
+  when: cPATH_NOT_FOUND not in standard_user_read_audit.stderr and standard_user_read_audit
   tags:
       - cat1
       - high
@@ -692,7 +720,7 @@
   register: anonymous_enum_sam_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in anonymous_enum_sam_audit.stderr and anonymous_enum_sam_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in anonymous_enum_sam_audit.stderr and anonymous_enum_sam_audit.stderr"
   tags:
       - cat1
       - high
@@ -704,7 +732,7 @@
       key: 'HKLM:\System\CurrentControlSet\Control\Lsa\'
       value: RestrictAnonymousSAM
       data: 1
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -722,12 +750,12 @@
       - V-26479
 
 - name: "HIGH | V-26479 | PATCH | Unauthorized accounts must not have the Create a token object user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeCreateTokenPrivilege
       value: ''
   register: secedit
-  failed_when: "secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg"
+  failed_when: secedit.failed is defined and 'This host is joined to a Domain Controller' not in secedit.msg
   tags:
       - cat1
       - high
@@ -739,7 +767,7 @@
   register: standard_read_active_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in standard_read_active_audit.stderr and standard_read_active_audit.stderr"
+  failed_when: cPATH_NOT_FOUND not in standard_read_active_audit.stderr and standard_read_active_audit.stderr
   tags:
       - cat1
       - high
@@ -752,7 +780,7 @@
   check_mode: no
   changed_when: no
   when: ansible_architecture == "64-bit"
-  failed_when: "path_not_found not in standard_read_active2_audit.stderr and standard_read_active2_audit.stderr"
+  failed_when: cPATH_NOT_FOUND not in standard_read_active2_audit.stderr and standard_read_active2_audit.stderr
   tags:
       - cat1
       - high
@@ -769,7 +797,7 @@
           rights: 'FullControl'
           type: '{{ item[1] }}'
           state: 'absent'
-      when: "not('Administrators' in item[0] or 'SYSTEM' in item[0]) or 'allow' not in item[1]"
+      when: not('Administrators' in item[0] or 'SYSTEM' in item[0]) or 'allow' not in item[1]
       with_nested:
           - "{{ standard_read_active_audit.stdout_lines }}"
           - [ allow, deny ]
@@ -815,7 +843,7 @@
           path: 'HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components'
           state: absent
 
-  when: "path_not_found not in standard_read_active_audit.stderr and standard_read_active_audit"
+  when: cPATH_NOT_FOUND not in standard_read_active_audit.stderr and standard_read_active_audit
   tags:
       - cat1
       - high
@@ -874,7 +902,7 @@
           path: 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Active Setup\Installed Components'
           state: absent
 
-  when: "ansible_architecture == '64-bit' and path_not_found not in standard_read_active2_audit.stderr and standard_read_active2_audit"
+  when: "ansible_architecture == '64-bit' and cPATH_NOT_FOUND not in standard_read_active2_audit.stderr and standard_read_active2_audit"
   tags:
       - cat1
       - high
@@ -887,7 +915,7 @@
   register: install_elevated_disabled_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in install_elevated_disabled_audit.stderr and install_elevated_disabled_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in install_elevated_disabled_audit.stderr and install_elevated_disabled_audit.stderr
   tags:
       - cat1
       - high
@@ -899,7 +927,7 @@
       key: 'HKLM:\Software\Policies\Microsoft\Windows\Installer\'
       value: AlwaysInstallElevated
       data: 0
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -911,7 +939,7 @@
   register: winrm_client_basic_auth_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in winrm_client_basic_auth_audit.stderr and winrm_client_basic_auth_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in winrm_client_basic_auth_audit.stderr and winrm_client_basic_auth_audit.stderr
   tags:
       - cat1
       - high
@@ -923,7 +951,7 @@
       key: 'HKLM:\Software\Policies\Microsoft\Windows\WinRM\Client'
       value: AllowBasic
       data: 0
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -935,7 +963,7 @@
   register: winrm_service_basic_auth_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in winrm_service_basic_auth_audit.stderr and winrm_service_basic_auth_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in winrm_service_basic_auth_audit.stderr and winrm_service_basic_auth_audit.stderr
   tags:
       - cat1
       - high
@@ -947,7 +975,7 @@
       key: 'HKLM:\Software\Policies\Microsoft\Windows\WinRM\Service\'
       value: AllowBasic
       data: 0
-      datatype: dword
+      type: dword
   tags:
       - cat1
       - high
@@ -959,7 +987,7 @@
   register: dat_date_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in dat_date_audit.stderr and dat_date_audit.stderr"
+  failed_when: cREG_NOT_FOUND not in dat_date_audit.stderr and dat_date_audit.stderr
   tags:
       - cat1
       - high

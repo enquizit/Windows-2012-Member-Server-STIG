@@ -29,8 +29,8 @@
       - V-1099
 
 - name: "MEDIUM | V-1099 | PATCH | The account lockout duration must be configured to require an administrator to unlock an account."
-  win_secedit: 
-      category: 'System Access'
+  win_security_policy: 
+      section: 'System Access'
       key: LockoutDuration
       value: -1
   register: secedit
@@ -55,8 +55,8 @@
       - V-1098
 
 - name: "MEDIUM | V-1098 | PATCH | The period of time before the invalid logon counter is reset must be configured to at least 60 minutes."
-  win_secedit: 
-      category: 'System Access'
+  win_security_policy: 
+      section: 'System Access'
       key: ResetLockoutCount
       value: 99999
   register: secedit
@@ -117,8 +117,8 @@
       - V-1107
 
 - name: "MEDIUM | V-1107 | PATCH | The password history must be configured to 24 passwords remembered."
-  win_secedit:
-      category: 'System Access'
+  win_security_policy:
+      section: 'System Access'
       key: PasswordHistorySize
       value: '12'
   register: secedit
@@ -140,8 +140,8 @@
       - V-1113
 
 - name: "MEDIUM | V-1113 | PATCH | The built-in guest account must be disabled."
-  win_secedit:
-      category: 'System Access'
+  win_security_policy:
+      section: 'System Access'
       key: EnableGuestAccount
       value: '0'
   register: secedit
@@ -163,8 +163,8 @@
       - V-1114
 
 # - name: "MEDIUM | V-1114 | PATCH | The built-in guest account will be renamed."
-#   win_secedit:
-#       category: 'System Access'
+#   win_security_policy:
+#       section: 'System Access'
 #       key: NewGuestName
 #       # Need single quote and double quote because secedit prepends and apends \" to value like \"value\" 
 #       value: '"Administrator"'
@@ -211,7 +211,7 @@
   register: ftp_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "ftp_service_audit.stderr and service_not_found not in ftp_service_audit.stderr"
+  failed_when: "ftp_service_audit.stderr and cSERVICE_NOT_FOUND not in ftp_service_audit.stderr"
   tags:
       - cat2
       - medium
@@ -265,7 +265,7 @@
   register: plain_text_password_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in plain_text_password_audit.stderr and plain_text_password_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in plain_text_password_audit.stderr and plain_text_password_audit.stderr"
   tags:
       - cat2
       - medium
@@ -289,7 +289,7 @@
   register: disable_automatic_logons_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_automatic_logons_audit.stderr and disable_automatic_logons_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_automatic_logons_audit.stderr and disable_automatic_logons_audit.stderr"
   tags:
       - cat2
       - medium
@@ -319,8 +319,8 @@
       - V-1150
 
 - name: "MEDIUM | V-1150 | PATCH | The built-in Windows password complexity policy must be enabled."
-  win_secedit:
-      category: 'System Access'
+  win_security_policy:
+      section: 'System Access'
       key: PasswordComplexity
       value: '1'
   register: secedit
@@ -336,7 +336,7 @@
   register: disable_CAD_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_CAD_audit.stderr and disable_CAD_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_CAD_audit.stderr and disable_CAD_audit.stderr"
   tags:
       - cat2
       - medium
@@ -368,8 +368,8 @@
 # Well-known security identifiers in Windows operating systems
 # https://support.microsoft.com/en-us/kb/243330
 - name: "MEDIUM | V-1155 | PATCH | The Deny access to this computer from the network user right on member servers must be configured to prevent access from highly privileged domain accounts and all local accounts on domain systems and unauthenticated access on all systems."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeDenyNetworkLogonRight
       value: '*S-1-5-32-546' # Guests group
   register: secedit
@@ -385,7 +385,7 @@
   register: SMB_server_packet_signing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in SMB_server_packet_signing_audit.stderr and SMB_server_packet_signing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in SMB_server_packet_signing_audit.stderr and SMB_server_packet_signing_audit.stderr"
   tags:
       - cat2
       - medium
@@ -397,7 +397,7 @@
   register: encrypt_outgoing_secure_channel_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in encrypt_outgoing_secure_channel_audit.stderr and encrypt_outgoing_secure_channel_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in encrypt_outgoing_secure_channel_audit.stderr and encrypt_outgoing_secure_channel_audit.stderr"
   tags:
       - cat2
       - medium
@@ -421,7 +421,7 @@
   register: sign_outgoing_secure_channel_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in sign_outgoing_secure_channel_audit.stderr and sign_outgoing_secure_channel_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in sign_outgoing_secure_channel_audit.stderr and sign_outgoing_secure_channel_audit.stderr"
   tags:
       - cat2
       - medium
@@ -445,7 +445,7 @@
   register: SMB_client_packet_signing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in SMB_client_packet_signing_audit.stderr and SMB_client_packet_signing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in SMB_client_packet_signing_audit.stderr and SMB_client_packet_signing_audit.stderr"
   tags:
       - cat2
       - medium
@@ -457,7 +457,7 @@
   register: eject_removable_media_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in eject_removable_media_audit.stderr and eject_removable_media_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in eject_removable_media_audit.stderr and eject_removable_media_audit.stderr"
   tags:
       - cat2
       - medium
@@ -487,8 +487,8 @@
       - V-2372
 
 - name: "MEDIUM | V-2372 | PATCH | Reversible password encryption will be disabled."
-  win_secedit:
-      category: 'System Access'
+  win_security_policy:
+      section: 'System Access'
       key: ClearTextPassword
       value: '0'
   register: secedit
@@ -504,7 +504,7 @@
   register: eject_removable_media_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_is_null not in eject_removable_media_audit.stderr and eject_removable_media_audit.stderr"
+  failed_when: "cPATH_IS_NULL not in eject_removable_media_audit.stderr and eject_removable_media_audit.stderr"
   tags:
       - cat2
       - medium
@@ -516,7 +516,7 @@
   register: strong_sessionkey_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in strong_sessionkey_audit.stderr and strong_sessionkey_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in strong_sessionkey_audit.stderr and strong_sessionkey_audit.stderr"
   tags:
       - cat2
       - medium
@@ -540,7 +540,7 @@
   register: creds_storage_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in creds_storage_audit.stderr and creds_storage_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in creds_storage_audit.stderr and creds_storage_audit.stderr"
   tags:
       - cat2
       - medium
@@ -564,7 +564,7 @@
   register: everyone_includes_anon_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in everyone_includes_anon_audit.stderr and everyone_includes_anon_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in everyone_includes_anon_audit.stderr and everyone_includes_anon_audit.stderr"
   tags:
       - cat2
       - medium
@@ -588,7 +588,7 @@
   register: classic_security_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in classic_security_audit.stderr and classic_security_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in classic_security_audit.stderr and classic_security_audit.stderr"
   tags:
       - cat2
       - medium
@@ -612,7 +612,7 @@
   register: LDAP_client_integrity_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in LDAP_client_integrity_audit.stderr and LDAP_client_integrity_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in LDAP_client_integrity_audit.stderr and LDAP_client_integrity_audit.stderr"
   tags:
       - cat2
       - medium
@@ -636,7 +636,7 @@
   register: NTLM_min_client_sec_audit
   check_mode: no
   changed_when: "'0x20080000' not in NTLM_min_client_sec_audit.stdout"
-  failed_when: "reg_not_found not in NTLM_min_client_sec_audit.stderr and NTLM_min_client_sec_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in NTLM_min_client_sec_audit.stderr and NTLM_min_client_sec_audit.stderr"
   tags:
       - cat2
       - medium
@@ -660,7 +660,7 @@
   register: FIPS_compliant_algorithms_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in FIPS_compliant_algorithms_audit.stderr and FIPS_compliant_algorithms_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in FIPS_compliant_algorithms_audit.stderr and FIPS_compliant_algorithms_audit.stderr"
   tags:
       - cat2
       - medium
@@ -680,7 +680,7 @@
   register: case_insensitive_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in case_insensitive_audit.stderr and case_insensitive_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in case_insensitive_audit.stderr and case_insensitive_audit.stderr"
   tags:
       - cat2
       - medium
@@ -704,7 +704,7 @@
   register: single_rdp_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in single_rdp_audit.stderr and single_rdp_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in single_rdp_audit.stderr and single_rdp_audit.stderr"
   tags:
       - cat2
       - medium
@@ -728,7 +728,7 @@
   register: rdp_password_prompt_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in rdp_password_prompt_audit.stderr and rdp_password_prompt_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in rdp_password_prompt_audit.stderr and rdp_password_prompt_audit.stderr"
   tags:
       - cat2
       - medium
@@ -752,7 +752,7 @@
   register: min_encrypt_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in min_encrypt_audit.stderr and min_encrypt_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in min_encrypt_audit.stderr and min_encrypt_audit.stderr"
   tags:
       - cat2
       - medium
@@ -764,7 +764,7 @@
   register: temp_folder_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in temp_folder_audit.stderr and temp_folder_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in temp_folder_audit.stderr and temp_folder_audit.stderr"
   tags:
       - cat2
       - medium
@@ -788,7 +788,7 @@
   register: delete_temp_folder_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in delete_temp_folder_audit.stderr and delete_temp_folder_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in delete_temp_folder_audit.stderr and delete_temp_folder_audit.stderr"
   tags:
       - cat2
       - medium
@@ -812,7 +812,7 @@
   register: max_disconnection_time_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in max_disconnection_time_audit.stderr and max_disconnection_time_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in max_disconnection_time_audit.stderr and max_disconnection_time_audit.stderr"
   tags:
       - cat2
       - medium
@@ -836,7 +836,7 @@
   register: max_idle_time_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in max_idle_time_audit.stderr and max_idle_time_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in max_idle_time_audit.stderr and max_idle_time_audit.stderr"
   tags:
       - cat2
       - medium
@@ -860,7 +860,7 @@
   register: background_group_policy_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in background_group_policy_audit.stderr and background_group_policy_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in background_group_policy_audit.stderr and background_group_policy_audit.stderr"
   tags:
       - cat2
       - medium
@@ -884,7 +884,7 @@
   register: unsolicited_remote_assistance_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in unsolicited_remote_assistance_audit.stderr and unsolicited_remote_assistance_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in unsolicited_remote_assistance_audit.stderr and unsolicited_remote_assistance_audit.stderr"
   tags:
       - cat2
       - medium
@@ -908,7 +908,7 @@
   register: safe_DLL_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in safe_DLL_audit.stderr and safe_DLL_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in safe_DLL_audit.stderr and safe_DLL_audit.stderr"
   tags:
       - cat2
       - medium
@@ -932,7 +932,7 @@
   register: WMP_auto_update_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in WMP_auto_update_audit.stderr and WMP_auto_update_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in WMP_auto_update_audit.stderr and WMP_auto_update_audit.stderr"
   tags:
       - cat2
       - medium
@@ -956,7 +956,7 @@
   register: WMP_codec_download_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in WMP_codec_download_audit.stderr and WMP_codec_download_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in WMP_codec_download_audit.stderr and WMP_codec_download_audit.stderr"
   tags:
       - cat2
       - medium
@@ -991,7 +991,7 @@
   register: NTLM_min_server_sec_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in NTLM_min_server_sec_audit.stderr and NTLM_min_server_sec_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in NTLM_min_server_sec_audit.stderr and NTLM_min_server_sec_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1015,7 +1015,7 @@
   register: software_restricition_policies_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in software_restricition_policies_audit.stderr and software_restricition_policies_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in software_restricition_policies_audit.stderr and software_restricition_policies_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1039,7 +1039,7 @@
   register: encrypt_RPC_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in encrypt_RPC_audit.stderr and encrypt_RPC_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in encrypt_RPC_audit.stderr and encrypt_RPC_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1064,7 +1064,7 @@
   check_mode: no
   changed_when: no
   when: ansible_powershell_version == 4
-  failed_when: "reg_not_found not in reprocess_GPO_audit.stderr and reprocess_GPO_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in reprocess_GPO_audit.stderr and reprocess_GPO_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1101,7 +1101,7 @@
   register: encrypt_or_sign_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in encrypt_or_sign_audit.stderr and encrypt_or_sign_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in encrypt_or_sign_audit.stderr and encrypt_or_sign_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1125,7 +1125,7 @@
   register: require_SMB_client_packet_signing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in require_SMB_client_packet_signing_audit.stderr and require_SMB_client_packet_signing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in require_SMB_client_packet_signing_audit.stderr and require_SMB_client_packet_signing_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1137,7 +1137,7 @@
   register: require_SMB_server_packet_signing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in require_SMB_server_packet_signing_audit.stderr and require_SMB_server_packet_signing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in require_SMB_server_packet_signing_audit.stderr and require_SMB_server_packet_signing_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1155,8 +1155,8 @@
       - V-6836
 
 - name: "MEDIUM | V-6836 | PATCH | For systems utilizing a logon ID as the individual identifier, passwords will, at a minimum, be 14 characters."
-  win_secedit: 
-      category: 'System Access'
+  win_security_policy: 
+      section: 'System Access'
       key: MinimumPasswordLength
       value: '8'
   register: secedit
@@ -1183,7 +1183,7 @@
   register: audit_base_objects_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in audit_base_objects_audit.stderr and audit_base_objects_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in audit_base_objects_audit.stderr and audit_base_objects_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1207,7 +1207,7 @@
   register: full_privilege_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in full_privilege_audit.stderr and full_privilege_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in full_privilege_audit.stderr and full_privilege_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1232,7 +1232,7 @@
   register: subcategories_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in subcategories_audit.stderr and subcategories_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in subcategories_audit.stderr and subcategories_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1256,7 +1256,7 @@
   register: admin_approval_mode_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in admin_approval_mode_audit.stderr and admin_approval_mode_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in admin_approval_mode_audit.stderr and admin_approval_mode_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1268,7 +1268,7 @@
   register: admin_consent_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in admin_consent_audit.stderr and admin_consent_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in admin_consent_audit.stderr and admin_consent_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1280,7 +1280,7 @@
   register: user_consent_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in user_consent_audit.stderr and user_consent_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in user_consent_audit.stderr and user_consent_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1292,7 +1292,7 @@
   register: enable_secure_UIA_paths_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in enable_secure_UIA_paths_audit.stderr and enable_secure_UIA_paths_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in enable_secure_UIA_paths_audit.stderr and enable_secure_UIA_paths_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1304,7 +1304,7 @@
   register: enable_UAC
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in enable_UAC.stderr and enable_UAC.stderr"
+  failed_when: "cREG_NOT_FOUND not in enable_UAC.stderr and enable_UAC.stderr"
   tags:
       - cat2
       - medium
@@ -1316,7 +1316,7 @@
   register: prompt_on_secure_desktop_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in prompt_on_secure_desktop_audit.stderr and prompt_on_secure_desktop_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in prompt_on_secure_desktop_audit.stderr and prompt_on_secure_desktop_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1328,7 +1328,7 @@
   register: UAC_virtualization_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in UAC_virtualization_audit.stderr and UAC_virtualization_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in UAC_virtualization_audit.stderr and UAC_virtualization_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1340,7 +1340,7 @@
   register: disable_RDC_password_saving_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_RDC_password_saving_audit.stderr and disable_RDC_password_saving_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_RDC_password_saving_audit.stderr and disable_RDC_password_saving_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1364,7 +1364,7 @@
   register: disable_local_drive_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_local_drive_audit.stderr and disable_local_drive_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_local_drive_audit.stderr and disable_local_drive_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1388,7 +1388,7 @@
   register: restrict_remote_clients_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in restrict_remote_clients_audit.stderr and restrict_remote_clients_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in restrict_remote_clients_audit.stderr and restrict_remote_clients_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1412,7 +1412,7 @@
   register: require_auth_RPC_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in require_auth_RPC_audit.stderr and require_auth_RPC_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in require_auth_RPC_audit.stderr and require_auth_RPC_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1436,7 +1436,7 @@
   register: disable_HTTP_printing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_HTTP_printing_audit.stderr and disable_HTTP_printing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_HTTP_printing_audit.stderr and disable_HTTP_printing_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1460,7 +1460,7 @@
   register: disable_HTTP_printer_drivers_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_HTTP_printer_drivers_audit.stderr and disable_HTTP_printer_drivers_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_HTTP_printer_drivers_audit.stderr and disable_HTTP_printer_drivers_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1484,7 +1484,7 @@
   register: windows_update_driver_search_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_update_driver_search_audit.stderr and windows_update_driver_search_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_update_driver_search_audit.stderr and windows_update_driver_search_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1508,7 +1508,7 @@
   register: save_zone_info_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in save_zone_info_audit.stderr and save_zone_info_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in save_zone_info_audit.stderr and save_zone_info_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1532,7 +1532,7 @@
   register: hide_zone_info_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in hide_zone_info_audit.stderr and hide_zone_info_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in hide_zone_info_audit.stderr and hide_zone_info_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1580,7 +1580,7 @@
   register: p2p_net_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in p2p_net_audit.stderr and p2p_net_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in p2p_net_audit.stderr and p2p_net_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1604,7 +1604,7 @@
   register: network_bridge_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in network_bridge_audit.stderr and network_bridge_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in network_bridge_audit.stderr and network_bridge_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1628,7 +1628,7 @@
   register: no_attachments_from_RSS_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in no_attachments_from_RSS_audit.stderr and no_attachments_from_RSS_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in no_attachments_from_RSS_audit.stderr and no_attachments_from_RSS_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1652,7 +1652,7 @@
   register: shell_protocol_protected_mode_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in shell_protocol_protected_mode_audit.stderr and shell_protocol_protected_mode_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in shell_protocol_protected_mode_audit.stderr and shell_protocol_protected_mode_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1664,7 +1664,7 @@
   register: install_notification_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in install_notification_audit.stderr and install_notification_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in install_notification_audit.stderr and install_notification_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1688,7 +1688,7 @@
   register: disable_mapper_IO_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_mapper_IO_audit.stderr and disable_mapper_IO_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_mapper_IO_audit.stderr and disable_mapper_IO_audit.stderr"
   with_items:
       - AllowLLTDIOOndomain
       - AllowLLTDIOOnPublicNet
@@ -1722,7 +1722,7 @@
   register: diable_responder_protocol_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in diable_responder_protocol_audit.stderr and diable_responder_protocol_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in diable_responder_protocol_audit.stderr and diable_responder_protocol_audit.stderr"
   with_items:
       - AllowRspndrOndomain
       - AllowRspndrOnPublicNet
@@ -1756,7 +1756,7 @@
   register: WCN_config_drivers_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in WCN_config_drivers_audit.stderr and WCN_config_drivers_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in WCN_config_drivers_audit.stderr and WCN_config_drivers_audit.stderr"
   with_items:
       - DisableFlashConfigRegistrar
       - DisableInBand802DOT11Registrar
@@ -1792,7 +1792,7 @@
   register: disable_WCN_UI_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_WCN_UI_audit.stderr and disable_WCN_UI_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_WCN_UI_audit.stderr and disable_WCN_UI_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1816,7 +1816,7 @@
   register: PnP_device_install_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in PnP_device_install_audit.stderr and PnP_device_install_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in PnP_device_install_audit.stderr and PnP_device_install_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1840,7 +1840,7 @@
   register: prompt_resume_DC_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in prompt_resume_DC_audit.stderr and prompt_resume_DC_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in prompt_resume_DC_audit.stderr and prompt_resume_DC_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1864,7 +1864,7 @@
   register: prompt_resume_AC_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in prompt_resume_AC_audit.stderr and prompt_resume_AC_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in prompt_resume_AC_audit.stderr and prompt_resume_AC_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1888,7 +1888,7 @@
   register: disable_spynet_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_spynet_audit.stderr and disable_spynet_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_spynet_audit.stderr and disable_spynet_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1911,7 +1911,7 @@
   register: save_error_logging_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in save_error_logging_audit.stderr and save_error_logging_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in save_error_logging_audit.stderr and save_error_logging_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1935,7 +1935,7 @@
   register: enable_error_logging_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in enable_error_logging_audit.stderr and enable_error_logging_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in enable_error_logging_audit.stderr and enable_error_logging_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1959,7 +1959,7 @@
   register: DRM_online_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in DRM_online_audit.stderr and DRM_online_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in DRM_online_audit.stderr and DRM_online_audit.stderr"
   tags:
       - cat2
       - medium
@@ -1983,7 +1983,7 @@
   register: sharing_files_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in sharing_files_audit.stderr and sharing_files_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in sharing_files_audit.stderr and sharing_files_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2033,7 +2033,7 @@
   register: UIA_desktop_toggle_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in UIA_desktop_toggle_audit.stderr and UIA_desktop_toggle_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in UIA_desktop_toggle_audit.stderr and UIA_desktop_toggle_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2045,7 +2045,7 @@
   register: COM_port_redirection_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in COM_port_redirection_audit.stderr and COM_port_redirection_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in COM_port_redirection_audit.stderr and COM_port_redirection_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2069,7 +2069,7 @@
   register: disable_LPT_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_LPT_audit.stderr and disable_LPT_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_LPT_audit.stderr and disable_LPT_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2093,7 +2093,7 @@
   register: PnP_redirect_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in PnP_redirect_audit.stderr and PnP_redirect_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in PnP_redirect_audit.stderr and PnP_redirect_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2117,7 +2117,7 @@
   register: smart_card_redirect_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in smart_card_redirect_audit.stderr and smart_card_redirect_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in smart_card_redirect_audit.stderr and smart_card_redirect_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2141,7 +2141,7 @@
   register: elevate_all_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in elevate_all_audit.stderr and elevate_all_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in elevate_all_audit.stderr and elevate_all_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2153,7 +2153,7 @@
   register: CEIP_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in CEIP_audit.stderr and CEIP_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in CEIP_audit.stderr and CEIP_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2177,7 +2177,7 @@
   register: WHEIP_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in WHEIP_audit.stderr and WHEIP_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in WHEIP_audit.stderr and WHEIP_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2201,7 +2201,7 @@
   register: help_ratings_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in help_ratings_audit.stderr and help_ratings_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in help_ratings_audit.stderr and help_ratings_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2225,7 +2225,7 @@
   register: SMB_server_name_level_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in SMB_server_name_level_audit.stderr and SMB_server_name_level_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in SMB_server_name_level_audit.stderr and SMB_server_name_level_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2237,7 +2237,7 @@
   register: use_machine_ID_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in use_machine_ID_audit.stderr and use_machine_ID_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in use_machine_ID_audit.stderr and use_machine_ID_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2249,7 +2249,7 @@
   register: null_session_fallback_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in null_session_fallback_audit.stderr and null_session_fallback_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in null_session_fallback_audit.stderr and null_session_fallback_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2273,7 +2273,7 @@
   register: online_ID_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in online_ID_audit.stderr and online_ID_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in online_ID_audit.stderr and online_ID_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2297,7 +2297,7 @@
   register: kerberos_encryption_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in kerberos_encryption_audit.stderr and kerberos_encryption_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in kerberos_encryption_audit.stderr and kerberos_encryption_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2321,7 +2321,7 @@
   register: DEP_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in DEP_audit.stderr and DEP_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in DEP_audit.stderr and DEP_audit.stderr"
   tags:
       - cat2
       - medium
@@ -2351,8 +2351,8 @@
       - V-26469
 
 - name: "MEDIUM | V-26469 | PATCH | Unauthorized accounts must not have the Access Credential Manager as a trusted caller user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeTrustedCredManAccessPrivilege
       value: ''
   register: secedit
@@ -2374,8 +2374,8 @@
       - V-26470
 
 - name: "MEDIUM | V-26470 | PATCH | Unauthorized accounts must not have the Access this computer from the network user right on member servers."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeNetworkLogonRight
       value: '*S-1-5-11,*S-1-5-32-544' #Authenticated Users, Administrators
   register: secedit
@@ -2397,8 +2397,8 @@
       - V-26471
 
 - name: "MEDIUM | V-26471 | PATCH | Unauthorized accounts must not have the Adjust memory quotas for a process user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeIncreaseQuotaPrivilege
       value: '*S-1-5-19,*S-1-5-20,*S-1-5-32-544' #Local Service, Network Service, Administrators
   register: secedit
@@ -2420,8 +2420,8 @@
       - V-26472
 
 - name: "MEDIUM | V-26472 | PATCH | Unauthorized accounts must not have the Allow log on locally user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeInteractiveLogonRight
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2443,8 +2443,8 @@
       - V-26473
 
 - name: "MEDIUM | V-26473 | PATCH | The Allow log on through Remote Desktop Services user right must only be assigned to the Administrators group and other approved groups."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeRemoteInteractiveLogonRight
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2466,8 +2466,8 @@
       - V-26474
 
 - name: "MEDIUM | V-26474 | PATCH | Unauthorized accounts must not have the Back up files and directories user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeBackupPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2489,8 +2489,8 @@
       - V-26476
 
 - name: "MEDIUM | V-26476 | PATCH | Unauthorized accounts must not have the Change the system time user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeSystemtimePrivilege
       value: '*S-1-5-19,*S-1-5-32-544' #Local Service, Administrators
   register: secedit
@@ -2512,8 +2512,8 @@
       - V-26478
 
 - name: "MEDIUM | V-26478 | PATCH | Unauthorized accounts must not have the Create a pagefile user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeCreatePagefilePrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2535,8 +2535,8 @@
       - V-26480
 
 - name: "MEDIUM | V-26480 | PATCH | Unauthorized accounts must not have the Create global objects user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeCreateGlobalPrivilege
       value: '*S-1-5-19,*S-1-5-20,*S-1-5-32-544,*S-1-5-6' #Local Service, Network Service, Administrators, Service
   register: secedit
@@ -2558,8 +2558,8 @@
       - V-26481
 
 - name: "MEDIUM | V-26481 | PATCH | Unauthorized accounts must not have the Create permanent shared objects user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeCreatePermanentPrivilege
       value: ''
   register: secedit
@@ -2581,8 +2581,8 @@
       - V-26482
 
 - name: "MEDIUM | V-26482 | PATCH | Unauthorized accounts must not have the Create symbolic links user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeCreateSymbolicLinkPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2604,8 +2604,8 @@
       - V-26483
 
 - name: "MEDIUM | V-26483 | PATCH | The Deny log on as a batch job user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and unauthenticated access on all systems."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeDenyBatchLogonRight
       value: '*S-1-5-32-546' #Guests
   register: secedit
@@ -2627,8 +2627,8 @@
       - V-26484
 
 - name: "MEDIUM | V-26484 | PATCH | The Deny log on as a service user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems.  No other groups or accounts must be assigned this right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeDenyServiceLogonRight
       value: ''
   register: secedit
@@ -2650,8 +2650,8 @@
       - V-26485
 
 - name: "MEDIUM | V-26485 | PATCH | The Deny log on locally user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and unauthenticated access on all systems."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeDenyInteractiveLogonRight
       value: '*S-1-5-32-546' #Guests
   register: secedit
@@ -2673,8 +2673,8 @@
       - V-26486
 
 - name: "MEDIUM | V-26486 | PATCH | The Deny log on through Remote Desktop Services user right on member servers must be configured to prevent access from highly privileged domain accounts and all local accounts on domain systems and unauthenticated access on all systems."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeDenyRemoteInteractiveLogonRight
       value: '*S-1-5-32-546' #Guests
   register: secedit
@@ -2696,8 +2696,8 @@
       - V-26487
 
 - name: "MEDIUM | V-26487 | PATCH | Unauthorized accounts must not have the Enable computer and user accounts to be trusted for delegation user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeEnableDelegationPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2719,8 +2719,8 @@
       - V-26488
 
 - name: "MEDIUM | V-26488 | PATCH | Unauthorized accounts must not have the Force shutdown from a remote system user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeRemoteShutdownPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2742,8 +2742,8 @@
       - V-26489
 
 - name: "MEDIUM | V-26489 | PATCH | Unauthorized accounts must not have the Generate security audits user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeAuditPrivilege
       value: '*S-1-5-19,*S-1-5-20' #Local Service, Network Service
   register: secedit
@@ -2765,8 +2765,8 @@
       - V-26490
 
 - name: "MEDIUM | V-26490 | PATCH | Unauthorized accounts must not have the Impersonate a client after authentication user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeImpersonatePrivilege
       value: '*S-1-5-19,*S-1-5-20,*S-1-5-32-544,*S-1-5-6' #Local Service, Network Service, Administrators, Service
   register: secedit
@@ -2788,8 +2788,8 @@
       - V-26491
 
 - name: "MEDIUM | V-26491 | PATCH | Unauthorized accounts must not have the Increase a process working set user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeIncreaseWorkingSetPrivilege
       value: '*S-1-5-19,*S-1-5-32-544' #Local Service, Administrators
   register: secedit
@@ -2811,8 +2811,8 @@
       - V-26492
 
 - name: "MEDIUM | V-26492 | PATCH | Unauthorized accounts must not have the Increase scheduling priority user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeIncreaseBasePriorityPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2834,8 +2834,8 @@
       - V-26493
 
 - name: "MEDIUM | V-26493 | PATCH | Unauthorized accounts must not have the Load and unload device drivers user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeLoadDriverPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2857,8 +2857,8 @@
       - V-26494
 
 - name: "MEDIUM | V-26494 | PATCH | Unauthorized accounts must not have the Lock pages in memory user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeLockMemoryPrivilege
       value: ''
   register: secedit
@@ -2880,8 +2880,8 @@
       - V-26495
 
 - name: "MEDIUM | V-26495 | PATCH | Unauthorized accounts must not have the Log on as a batch job user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeBatchLogonRight
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2903,8 +2903,8 @@
       - V-26496
 
 - name: "MEDIUM | V-26496 | PATCH | Unauthorized accounts must not have the Manage auditing and security log user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeSecurityPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2926,8 +2926,8 @@
       - V-26497
 
 - name: "MEDIUM | V-26497 | PATCH | Unauthorized accounts must not have the Modify an object label user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeRelabelPrivilege
       value: ''
   register: secedit
@@ -2949,8 +2949,8 @@
       - V-26498
 
 - name: "MEDIUM | V-26498 | PATCH | Unauthorized accounts must not have the Modify firmware environment values user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeSystemEnvironmentPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2972,8 +2972,8 @@
       - V-26499
 
 - name: "MEDIUM | V-26499 | PATCH | Unauthorized accounts must not have the Perform volume maintenance tasks user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeManageVolumePrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -2995,8 +2995,8 @@
       - V-26500
 
 - name: "MEDIUM | V-26500 | PATCH | Unauthorized accounts must not have the Profile single process user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeProfileSingleProcessPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -3018,8 +3018,8 @@
       - V-26501
 
 - name: "MEDIUM | V-26501 | PATCH | Unauthorized accounts must not have the Profile system performance user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeSystemProfilePrivilege
       value: '*S-1-5-32-544,*S-1-5-80-3139157870-2983391045-3678747466-658725712-1809340420' #Administrators, NT Service\WdiServiceHost
   register: secedit
@@ -3041,8 +3041,8 @@
       - V-26503
 
 - name: "MEDIUM | V-26503 | PATCH | Unauthorized accounts must not have the Replace a process level token user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeAssignPrimaryTokenPrivilege
       value: '*S-1-5-19,*S-1-5-20' #Local Service, Network Service
   register: secedit
@@ -3064,8 +3064,8 @@
       - V-26504
 
 - name: "MEDIUM | V-26504 | PATCH | Unauthorized accounts must not have the Restore files and directories user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeRestorePrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -3087,8 +3087,8 @@
       - V-26505
 
 - name: "MEDIUM | V-26505 | PATCH | Unauthorized accounts must not have the Shut down the system user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeShutdownPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -3110,8 +3110,8 @@
       - V-26506
 
 - name: "MEDIUM | V-26506 | PATCH | Unauthorized accounts must not have the Take ownership of files or other objects user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeTakeOwnershipPrivilege
       value: '*S-1-5-32-544' #Administrators
   register: secedit
@@ -3123,7 +3123,7 @@
       - V-26506
 
 - name: "MEDIUM | V-26529 | AUDIT | The system will be configured to audit 'Account Logon -> Credential Validation' successes."
-  win_shell: AuditPol /get /subcategory:"Credential Validation"
+  win_shell: AuditPol /get /subsection:"Credential Validation"
   register: success_cred_audit
   check_mode: no
   changed_when: no
@@ -3134,7 +3134,7 @@
       - V-26529
 
 - name: "MEDIUM | V-26529 | PATCH | The system will be configured to audit 'Account Logon -> Credential Validation' successes."
-  win_shell: AuditPol /set /subcategory:"Credential Validation" /success:enable
+  win_shell: AuditPol /set /subsection:"Credential Validation" /success:enable
   when: "'Success' not in success_cred_audit.stdout"
   tags:
       - cat2
@@ -3143,7 +3143,7 @@
       - V-26529
 
 - name: "MEDIUM | V-26530 | AUDIT | The system will be configured to audit 'Account Logon -> Credential Validation' failures."
-  win_shell: AuditPol /get /subcategory:"Credential Validation"
+  win_shell: AuditPol /get /subsection:"Credential Validation"
   register: failure_cred_audit
   check_mode: no
   changed_when: no
@@ -3154,7 +3154,7 @@
       - V-26530
 
 - name: "MEDIUM | V-26530 | PATCH | The system will be configured to audit 'Account Logon -> Credential Validation' failures."
-  win_shell: AuditPol /set /subcategory:"Credential Validation" /failure:enable
+  win_shell: AuditPol /set /subsection:"Credential Validation" /failure:enable
   when: "'Failure' not in failure_cred_audit.stdout"
   tags:
       - cat2
@@ -3163,7 +3163,7 @@
       - V-26530
 
 - name: "MEDIUM | V-26531 | AUDIT | The system will be configured to audit 'Account Management -> Computer Account Management' successes."
-  win_shell: AuditPol /get /subcategory:"Computer Account Management"
+  win_shell: AuditPol /get /subsection:"Computer Account Management"
   register: success_computer_account_management_audit
   check_mode: no
   changed_when: no
@@ -3174,7 +3174,7 @@
       - V-26531
 
 - name: "MEDIUM | V-26531 | PATCH | The system will be configured to audit 'Account Management -> Computer Account Management' successes."
-  win_shell: AuditPol /set /subcategory:"Computer Account Management" /success:enable
+  win_shell: AuditPol /set /subsection:"Computer Account Management" /success:enable
   when: "'Success' not in success_computer_account_management_audit.stdout"
   tags:
       - cat2
@@ -3183,7 +3183,7 @@
       - V-26531
 
 - name: "MEDIUM | V-26532 | AUDIT | The system will be configured to audit 'Account Management -> Computer Account Management' failures."
-  win_shell: AuditPol /get /subcategory:"Computer Account Management"
+  win_shell: AuditPol /get /subsection:"Computer Account Management"
   register: failure_computer_account_management_audit
   check_mode: no
   changed_when: no
@@ -3194,7 +3194,7 @@
       - V-26532
 
 - name: "MEDIUM | V-26532 | PATCH | The system will be configured to audit 'Account Management -> Computer Account Management' failures."
-  win_shell: AuditPol /set /subcategory:"Computer Account Management" /failure:enable
+  win_shell: AuditPol /set /subsection:"Computer Account Management" /failure:enable
   when: "'Failure' not in failure_computer_account_management_audit.stdout"
   tags:
       - cat2
@@ -3203,7 +3203,7 @@
       - V-26532
 
 - name: "MEDIUM | V-26533 | AUDIT | The system will be configured to audit 'Account Management -> Other Account Management Events' successes."
-  win_shell: AuditPol /get /subcategory:"Other Account Management Events"
+  win_shell: AuditPol /get /subsection:"Other Account Management Events"
   register: success_other_account_management_audit
   check_mode: no
   changed_when: no
@@ -3214,7 +3214,7 @@
       - V-26533
 
 - name: "MEDIUM | V-26533 | PATCH | The system will be configured to audit 'Account Management -> Other Account Management Events' successes."
-  win_shell: AuditPol /set /subcategory:"Other Account Management Events" /success:enable
+  win_shell: AuditPol /set /subsection:"Other Account Management Events" /success:enable
   when: "'Success' not in success_other_account_management_audit.stdout"
   tags:
       - cat2
@@ -3223,7 +3223,7 @@
       - V-26533
 
 - name: "MEDIUM | V-26534 | AUDIT | The system will be configured to audit 'Account Management -> Other Account Management Events' failures."
-  win_shell: AuditPol /get /subcategory:"Other Account Management Events"
+  win_shell: AuditPol /get /subsection:"Other Account Management Events"
   register: failure_other_account_management_audit
   check_mode: no
   changed_when: no
@@ -3234,7 +3234,7 @@
       - V-26534
 
 - name: "MEDIUM | V-26534 | PATCH | The system will be configured to audit 'Account Management -> Other Account Management Events' failures."
-  win_shell: AuditPol /set /subcategory:"Other Account Management Events" /failure:enable
+  win_shell: AuditPol /set /subsection:"Other Account Management Events" /failure:enable
   when: "'Failure' not in failure_other_account_management_audit.stdout"
   tags:
       - cat2
@@ -3243,7 +3243,7 @@
       - V-26534
 
 - name: "MEDIUM | V-26535 | AUDIT | The system will be configured to audit 'Account Management -> Security Group Management' successes."
-  win_shell: AuditPol /get /subcategory:"Security Group Management"
+  win_shell: AuditPol /get /subsection:"Security Group Management"
   register: success_security_group_management_audit
   check_mode: no
   changed_when: no
@@ -3254,7 +3254,7 @@
       - V-26535
 
 - name: "MEDIUM | V-26535 | PATCH | The system will be configured to audit 'Account Management -> Security Group Management' successes."
-  win_shell: AuditPol /set /subcategory:"Security Group Management" /success:enable
+  win_shell: AuditPol /set /subsection:"Security Group Management" /success:enable
   when: "'Success' not in success_security_group_management_audit.stdout"
   tags:
       - cat2
@@ -3263,7 +3263,7 @@
       - V-26535
 
 - name: "MEDIUM | V-26536 | AUDIT | The system will be configured to audit 'Account Management -> Security Group Management' failures."
-  win_shell: AuditPol /get /subcategory:"Security Group Management"
+  win_shell: AuditPol /get /subsection:"Security Group Management"
   register: failure_security_group_management_audit
   check_mode: no
   changed_when: no
@@ -3274,7 +3274,7 @@
       - V-26536
 
 - name: "MEDIUM | V-26536 | PATCH | The system will be configured to audit 'Account Management -> Security Group Management' failures."
-  win_shell: AuditPol /set /subcategory:"Security Group Management" /failure:enable
+  win_shell: AuditPol /set /subsection:"Security Group Management" /failure:enable
   when: "'Failure' not in failure_security_group_management_audit.stdout"
   tags:
       - cat2
@@ -3283,7 +3283,7 @@
       - V-26536
 
 - name: "MEDIUM | V-26537 | AUDIT | The system will be configured to audit 'Account Management -> User Account Management' successes."
-  win_shell: AuditPol /get /subcategory:"User Account Management"
+  win_shell: AuditPol /get /subsection:"User Account Management"
   register: success_user_account_management_audit
   check_mode: no
   changed_when: no
@@ -3294,7 +3294,7 @@
       - V-26537
 
 - name: "MEDIUM | V-26537 | PATCH | The system will be configured to audit 'Account Management -> User Account Management' successes."
-  win_shell: AuditPol /set /subcategory:"User Account Management" /success:enable
+  win_shell: AuditPol /set /subsection:"User Account Management" /success:enable
   when: "'Success' not in success_user_account_management_audit.stdout"
   tags:
       - cat2
@@ -3303,7 +3303,7 @@
       - V-26537
 
 - name: "MEDIUM | V-26538 | AUDIT | The system will be configured to audit 'Account Management -> User Account Management' failures."
-  win_shell: AuditPol /get /subcategory:"User Account Management"
+  win_shell: AuditPol /get /subsection:"User Account Management"
   register: failure_user_account_management_audit
   check_mode: no
   changed_when: no
@@ -3314,7 +3314,7 @@
       - V-26538
 
 - name: "MEDIUM | V-26538 | PATCH | The system will be configured to audit 'Account Management -> User Account Management' failures."
-  win_shell: AuditPol /set /subcategory:"User Account Management" /failure:enable
+  win_shell: AuditPol /set /subsection:"User Account Management" /failure:enable
   when: "'Failure' not in failure_user_account_management_audit.stdout"
   tags:
       - cat2
@@ -3323,7 +3323,7 @@
       - V-26538
 
 - name: "MEDIUM | V-26539 | AUDIT | The system will be configured to audit 'Detailed Tracking -> Process Creation' successes."
-  win_shell: AuditPol /get /subcategory:"Process Creation"
+  win_shell: AuditPol /get /subsection:"Process Creation"
   register: success_process_creation_audit
   check_mode: no
   changed_when: no
@@ -3334,7 +3334,7 @@
       - V-26539
 
 - name: "MEDIUM | V-26539 | PATCH | The system will be configured to audit 'Detailed Tracking -> Process Creation' successes."
-  win_shell: AuditPol /set /subcategory:"Process Creation" /success:enable
+  win_shell: AuditPol /set /subsection:"Process Creation" /success:enable
   when: "'Success' not in success_process_creation_audit.stdout"
   tags:
       - cat2
@@ -3343,7 +3343,7 @@
       - V-26539
 
 - name: "MEDIUM | V-26540 | AUDIT | The system will be configured to audit 'Logon/Logoff -> Logoff' successes."
-  win_shell: AuditPol /get /subcategory:"Logoff"
+  win_shell: AuditPol /get /subsection:"Logoff"
   register: success_logoff_audit
   check_mode: no
   changed_when: no
@@ -3354,7 +3354,7 @@
       - V-26540
 
 - name: "MEDIUM | V-26540 | PATCH | The system will be configured to audit 'Logon/Logoff -> Logoff' successes."
-  win_shell: AuditPol /set /subcategory:"Logoff" /success:enable
+  win_shell: AuditPol /set /subsection:"Logoff" /success:enable
   when: "'Success' not in success_logoff_audit.stdout"
   tags:
       - cat2
@@ -3363,7 +3363,7 @@
       - V-26540
 
 - name: "MEDIUM | V-26541 | AUDIT | The system will be configured to audit 'Logon/Logoff -> Logon' successes."
-  win_shell: AuditPol /get /subcategory:"Logon"
+  win_shell: AuditPol /get /subsection:"Logon"
   register: success_logon_audit
   check_mode: no
   changed_when: no
@@ -3374,7 +3374,7 @@
       - V-26541
 
 - name: "MEDIUM | V-26541 | PATCH | The system will be configured to audit 'Logon/Logoff -> Logon' successes."
-  win_shell: AuditPol /set /subcategory:"Logon" /success:enable
+  win_shell: AuditPol /set /subsection:"Logon" /success:enable
   when: "'Success' not in success_logon_audit.stdout"
   tags:
       - cat2
@@ -3383,7 +3383,7 @@
       - V-26541
 
 - name: "MEDIUM | V-26542 | AUDIT | The system will be configured to audit 'Logon/Logoff -> Logon' failures."
-  win_shell: AuditPol /get /subcategory:"Logon"
+  win_shell: AuditPol /get /subsection:"Logon"
   register: failure_logon_audit
   check_mode: no
   changed_when: no
@@ -3394,7 +3394,7 @@
       - V-26542
 
 - name: "MEDIUM | V-26542 | PATCH | The system will be configured to audit 'Logon/Logoff -> Logon' failures."
-  win_shell: AuditPol /set /subcategory:"Logon" /failure:enable
+  win_shell: AuditPol /set /subsection:"Logon" /failure:enable
   when: "'Failure' not in failure_logon_audit.stdout"
   tags:
       - cat2
@@ -3403,7 +3403,7 @@
       - V-26542
 
 - name: "MEDIUM | V-26543 | AUDIT | The system will be configured to audit 'Logon/Logoff -> Special Logon' successes."
-  win_shell: AuditPol /get /subcategory:"Special Logon"
+  win_shell: AuditPol /get /subsection:"Special Logon"
   register: success_special_logon_audit
   check_mode: no
   changed_when: no
@@ -3414,7 +3414,7 @@
       - V-26543
 
 - name: "MEDIUM | V-26543 | PATCH | The system will be configured to audit 'Logon/Logoff -> Special Logon' successes."
-  win_shell: AuditPol /set /subcategory:"Special Logon" /success:enable
+  win_shell: AuditPol /set /subsection:"Special Logon" /success:enable
   when: "'Success' not in success_special_logon_audit.stdout"
   tags:
       - cat2
@@ -3423,7 +3423,7 @@
       - V-26543
 
 - name: "MEDIUM | V-26546 | AUDIT | The system will be configured to audit 'Policy Change -> Audit Policy Change' successes."
-  win_shell: AuditPol /get /subcategory:"Audit Policy Change"
+  win_shell: AuditPol /get /subsection:"Audit Policy Change"
   register: success_audit_policy_change_audit
   check_mode: no
   changed_when: no
@@ -3434,7 +3434,7 @@
       - V-26546
 
 - name: "MEDIUM | V-26546 | PATCH | The system will be configured to audit 'Policy Change -> Audit Policy Change' successes."
-  win_shell: AuditPol /set /subcategory:"Audit Policy Change" /success:enable
+  win_shell: AuditPol /set /subsection:"Audit Policy Change" /success:enable
   when: "'Success' not in success_audit_policy_change_audit.stdout"
   tags:
       - cat2
@@ -3443,7 +3443,7 @@
       - V-26546
 
 - name: "MEDIUM | V-26547 | AUDIT | The system will be configured to audit 'Policy Change -> Audit Policy Change' failures."
-  win_shell: AuditPol /get /subcategory:"Audit Policy Change"
+  win_shell: AuditPol /get /subsection:"Audit Policy Change"
   register: failure_audit_policy_change_audit
   check_mode: no
   changed_when: no
@@ -3454,7 +3454,7 @@
       - V-26547
 
 - name: "MEDIUM | V-26547 | PATCH | The system will be configured to audit 'Policy Change -> Audit Policy Change' failures."
-  win_shell: AuditPol /set /subcategory:"Audit Policy Change" /failure:enable
+  win_shell: AuditPol /set /subsection:"Audit Policy Change" /failure:enable
   when: "'Failure' not in failure_audit_policy_change_audit.stdout"
   tags:
       - cat2
@@ -3463,7 +3463,7 @@
       - V-26547
 
 - name: "MEDIUM | V-26548 | AUDIT | The system will be configured to audit 'Policy Change -> Authentication Policy Change' successes."
-  win_shell: AuditPol /get /subcategory:"Authentication Policy Change"
+  win_shell: AuditPol /get /subsection:"Authentication Policy Change"
   register: success_authentication_policy_change_audit
   check_mode: no
   changed_when: no
@@ -3474,7 +3474,7 @@
       - V-26548
 
 - name: "MEDIUM | V-26548 | PATCH | The system will be configured to audit 'Policy Change -> Authentication Policy Change' successes."
-  win_shell: AuditPol /set /subcategory:"Authentication Policy Change" /success:enable
+  win_shell: AuditPol /set /subsection:"Authentication Policy Change" /success:enable
   when: "'Success' not in success_authentication_policy_change_audit.stdout"
   tags:
       - cat2
@@ -3483,7 +3483,7 @@
       - V-26548
 
 - name: "MEDIUM | V-26549 | AUDIT | The system will be configured to audit 'Privilege Use -> Sensitive Privilege Use' successes."
-  win_shell: AuditPol /get /subcategory:"Sensitive Privilege Use"
+  win_shell: AuditPol /get /subsection:"Sensitive Privilege Use"
   register: success_sensitive_privilege_use_audit
   check_mode: no
   changed_when: no
@@ -3494,7 +3494,7 @@
       - V-26549
 
 - name: "MEDIUM | V-26549 | PATCH | The system will be configured to audit 'Privilege Use -> Sensitive Privilege Use' successes."
-  win_shell: AuditPol /set /subcategory:"Sensitive Privilege Use" /success:enable
+  win_shell: AuditPol /set /subsection:"Sensitive Privilege Use" /success:enable
   when: "'Success' not in success_sensitive_privilege_use_audit.stdout"
   tags:
       - cat2
@@ -3503,7 +3503,7 @@
       - V-26549
 
 - name: "MEDIUM | V-26550 | AUDIT | The system will be configured to audit 'Privilege Use -> Sensitive Privilege Use' failures."
-  win_shell: AuditPol /get /subcategory:"Sensitive Privilege Use"
+  win_shell: AuditPol /get /subsection:"Sensitive Privilege Use"
   register: failure_sensitive_privilege_use_audit
   check_mode: no
   changed_when: no
@@ -3514,7 +3514,7 @@
       - V-26550
 
 - name: "MEDIUM | V-26550 | PATCH | The system will be configured to audit 'Privilege Use -> Sensitive Privilege Use' failures."
-  win_shell: AuditPol /set /subcategory:"Sensitive Privilege Use" /failure:enable
+  win_shell: AuditPol /set /subsection:"Sensitive Privilege Use" /failure:enable
   when: "'Failure' not in failure_sensitive_privilege_use_audit.stdout"
   tags:
       - cat2
@@ -3523,7 +3523,7 @@
       - V-26550
 
 - name: "MEDIUM | V-26551 | AUDIT | The system will be configured to audit 'System -> IPSec Driver' successes."
-  win_shell: AuditPol /get /subcategory:"IPSec Driver"
+  win_shell: AuditPol /get /subsection:"IPSec Driver"
   register: success_IPSec_driver_audit
   check_mode: no
   changed_when: no
@@ -3534,7 +3534,7 @@
       - V-26551
 
 - name: "MEDIUM | V-26551 | PATCH | The system will be configured to audit 'System -> IPSec Driver' successes."
-  win_shell: AuditPol /set /subcategory:"IPSec Driver" /success:enable
+  win_shell: AuditPol /set /subsection:"IPSec Driver" /success:enable
   when: "'Success' not in success_IPSec_driver_audit.stdout"
   tags:
       - cat2
@@ -3543,7 +3543,7 @@
       - V-26551
 
 - name: "MEDIUM | V-26552 | AUDIT | The system will be configured to audit 'System -> IPSec Driver' failures."
-  win_shell: AuditPol /get /subcategory:"IPSec Driver"
+  win_shell: AuditPol /get /subsection:"IPSec Driver"
   register: failure_IPSec_driver_audit
   check_mode: no
   changed_when: no
@@ -3554,7 +3554,7 @@
       - V-26552
 
 - name: "MEDIUM | V-26552 | PATCH | The system will be configured to audit 'System -> IPSec Driver' failures."
-  win_shell: AuditPol /set /subcategory:"IPSec Driver" /failure:enable
+  win_shell: AuditPol /set /subsection:"IPSec Driver" /failure:enable
   when: "'Failure' not in failure_IPSec_driver_audit.stdout"
   tags:
       - cat2
@@ -3563,7 +3563,7 @@
       - V-26552
 
 - name: "MEDIUM | V-26553 | AUDIT | The system will be configured to audit 'System -> Security State Change' successes."
-  win_shell: AuditPol /get /subcategory:"Security State Change"
+  win_shell: AuditPol /get /subsection:"Security State Change"
   register: success_security_state_change_audit
   check_mode: no
   changed_when: no
@@ -3574,7 +3574,7 @@
       - V-26553
 
 - name: "MEDIUM | V-26553 | PATCH | The system will be configured to audit 'System -> Security State Change' successes."
-  win_shell: AuditPol /set /subcategory:"Security State Change" /success:enable
+  win_shell: AuditPol /set /subsection:"Security State Change" /success:enable
   when: "'Success' not in success_security_state_change_audit.stdout"
   tags:
       - cat2
@@ -3583,7 +3583,7 @@
       - V-26553
 
 - name: "MEDIUM | V-26554 | AUDIT | The system will be configured to audit 'System -> Security State Change' failures."
-  win_shell: AuditPol /get /subcategory:"Security State Change"
+  win_shell: AuditPol /get /subsection:"Security State Change"
   register: failure_security_state_change_audit
   check_mode: no
   changed_when: no
@@ -3594,7 +3594,7 @@
       - V-26554
 
 - name: "MEDIUM | V-26554 | PATCH | The system will be configured to audit 'System -> Security State Change' failures."
-  win_shell: AuditPol /set /subcategory:"Security State Change" /failure:enable
+  win_shell: AuditPol /set /subsection:"Security State Change" /failure:enable
   when: "'Failure' not in failure_security_state_change_audit.stdout"
   tags:
       - cat2
@@ -3603,7 +3603,7 @@
       - V-26554
 
 - name: "MEDIUM | V-26555 | AUDIT | The system will be configured to audit 'System -> Security System Extension' successes."
-  win_shell: AuditPol /get /subcategory:"Security System Extension"
+  win_shell: AuditPol /get /subsection:"Security System Extension"
   register: success_security_system_extension_audit
   check_mode: no
   changed_when: no
@@ -3614,7 +3614,7 @@
       - V-26555
 
 - name: "MEDIUM | V-26555 | PATCH | The system will be configured to audit 'System -> Security System Extension' successes."
-  win_shell: AuditPol /set /subcategory:"Security System Extension" /success:enable
+  win_shell: AuditPol /set /subsection:"Security System Extension" /success:enable
   when: "'Success' not in success_security_system_extension_audit.stdout"
   tags:
       - cat2
@@ -3623,7 +3623,7 @@
       - V-26555
 
 - name: "MEDIUM | V-26556 | AUDIT | The system will be configured to audit 'System -> Security System Extension' failures."
-  win_shell: AuditPol /get /subcategory:"Security System Extension"
+  win_shell: AuditPol /get /subsection:"Security System Extension"
   register: failure_security_system_extension_audit
   check_mode: no
   changed_when: no
@@ -3634,7 +3634,7 @@
       - V-26556
 
 - name: "MEDIUM | V-26556 | PATCH | The system will be configured to audit 'System -> Security System Extension' failures."
-  win_shell: AuditPol /set /subcategory:"Security System Extension" /failure:enable
+  win_shell: AuditPol /set /subsection:"Security System Extension" /failure:enable
   when: "'Failure' not in failure_security_system_extension_audit.stdout"
   tags:
       - cat2
@@ -3643,7 +3643,7 @@
       - V-26556
 
 - name: "MEDIUM | V-26557 | AUDIT | The system will be configured to audit 'System -> System Integrity' successes."
-  win_shell: AuditPol /get /subcategory:"System Integrity"
+  win_shell: AuditPol /get /subsection:"System Integrity"
   register: success_system_integrity_audit
   check_mode: no
   changed_when: no
@@ -3654,7 +3654,7 @@
       - V-26557
 
 - name: "MEDIUM | V-26557 | PATCH | The system will be configured to audit 'System -> System Integrity' successes."
-  win_shell: AuditPol /set /subcategory:"System Integrity" /success:enable
+  win_shell: AuditPol /set /subsection:"System Integrity" /success:enable
   when: "'Success' not in success_system_integrity_audit.stdout"
   tags:
       - cat2
@@ -3663,7 +3663,7 @@
       - V-26557
 
 - name: "MEDIUM | V-26558 | AUDIT | The system will be configured to audit 'System -> System Integrity' failures."
-  win_shell: AuditPol /get /subcategory:"System Integrity"
+  win_shell: AuditPol /get /subsection:"System Integrity"
   register: failure_system_integrity_audit
   check_mode: no
   changed_when: no
@@ -3674,7 +3674,7 @@
       - V-26558
 
 - name: "MEDIUM | V-26558 | PATCH | The system will be configured to audit 'System -> System Integrity' failures."
-  win_shell: AuditPol /set /subcategory:"System Integrity" /failure:enable
+  win_shell: AuditPol /set /subsection:"System Integrity" /failure:enable
   when: "'Failure' not in failure_system_integrity_audit.stdout"
   tags:
       - cat2
@@ -3687,7 +3687,7 @@
   register: six_to_four_audit
   check_mode: no
   changed_when: no
-  failed_when: "six_to_four_audit.stderr and reg_not_found not in six_to_four_audit.stderr"
+  failed_when: "six_to_four_audit.stderr and cREG_NOT_FOUND not in six_to_four_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3711,7 +3711,7 @@
   register: IPv6_transition_audit
   check_mode: no
   changed_when: no
-  failed_when: "IPv6_transition_audit.stderr and reg_not_found not in IPv6_transition_audit.stderr"
+  failed_when: "IPv6_transition_audit.stderr and cREG_NOT_FOUND not in IPv6_transition_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3735,7 +3735,7 @@
   register: ISATAP_audit
   check_mode: no
   changed_when: no
-  failed_when: "ISATAP_audit.stderr and reg_not_found not in ISATAP_audit.stderr"
+  failed_when: "ISATAP_audit.stderr and cREG_NOT_FOUND not in ISATAP_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3759,7 +3759,7 @@
   register: Teredo_audit
   check_mode: no
   changed_when: no
-  failed_when: "Teredo_audit.stderr and reg_not_found not in Teredo_audit.stderr"
+  failed_when: "Teredo_audit.stderr and cREG_NOT_FOUND not in Teredo_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3783,7 +3783,7 @@
   register: application_log_max_size_audit
   check_mode: no
   changed_when: no
-  failed_when: "application_log_max_size_audit.stderr and reg_not_found not in application_log_max_size_audit.stderr"
+  failed_when: "application_log_max_size_audit.stderr and cREG_NOT_FOUND not in application_log_max_size_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3807,7 +3807,7 @@
   register: security_log_max_size_audit
   check_mode: no
   changed_when: no
-  failed_when: "security_log_max_size_audit.stderr and reg_not_found not in security_log_max_size_audit.stderr"
+  failed_when: "security_log_max_size_audit.stderr and cREG_NOT_FOUND not in security_log_max_size_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3831,7 +3831,7 @@
   register: setup_log_max_size_audit
   check_mode: no
   changed_when: no
-  failed_when: "setup_log_max_size_audit.stderr and reg_not_found not in setup_log_max_size_audit.stderr"
+  failed_when: "setup_log_max_size_audit.stderr and cREG_NOT_FOUND not in setup_log_max_size_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3855,7 +3855,7 @@
   register: system_log_max_size_audit
   check_mode: no
   changed_when: no
-  failed_when: "system_log_max_size_audit.stderr and reg_not_found not in system_log_max_size_audit.stderr"
+  failed_when: "system_log_max_size_audit.stderr and cREG_NOT_FOUND not in system_log_max_size_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3879,7 +3879,7 @@
   register: fax_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "fax_service_audit.stderr and service_not_found not in fax_service_audit.stderr"
+  failed_when: "fax_service_audit.stderr and cSERVICE_NOT_FOUND not in fax_service_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3903,7 +3903,7 @@
   register: ftp_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "ftp_service_audit.stderr and service_not_found not in ftp_service_audit.stderr"
+  failed_when: "ftp_service_audit.stderr and cSERVICE_NOT_FOUND not in ftp_service_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3915,7 +3915,7 @@
   register: p2p_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "p2p_service_audit.stderr and service_not_found not in p2p_service_audit.stderr"
+  failed_when: "p2p_service_audit.stderr and cSERVICE_NOT_FOUND not in p2p_service_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3939,7 +3939,7 @@
   register: simtcp_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "simtcp_service_audit.stderr and service_not_found not in simtcp_service_audit.stderr"
+  failed_when: "simtcp_service_audit.stderr and cSERVICE_NOT_FOUND not in simtcp_service_audit.stderr"
   tags:
       - cat2
       - medium
@@ -3963,7 +3963,7 @@
   register: telnet_service_audit
   check_mode: no
   changed_when: no
-  failed_when: "telnet_service_audit.stderr and service_not_found not in telnet_service_audit.stderr"
+  failed_when: "telnet_service_audit.stderr and cSERVICE_NOT_FOUND not in telnet_service_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4025,7 +4025,7 @@
   register: token_filter_audit
   check_mode: no
   changed_when: no
-  failed_when: "token_filter_audit.stderr and reg_not_found not in token_filter_audit.stderr"
+  failed_when: "token_filter_audit.stderr and cREG_NOT_FOUND not in token_filter_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4049,7 +4049,7 @@
   register: screen_saver_enabled_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in screen_saver_enabled_audit.stderr and screen_saver_enabled_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in screen_saver_enabled_audit.stderr and screen_saver_enabled_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4073,7 +4073,7 @@
   register: screen_saver_secure_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in screen_saver_secure_audit.stderr and screen_saver_secure_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in screen_saver_secure_audit.stderr and screen_saver_secure_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4093,7 +4093,7 @@
       - V-36657
 
 - name: "MEDIUM | V-36667 | AUDIT | The system must be configured to audit Object Access - Removable Storage failures."
-  win_shell: "AuditPol /get /subcategory:'Removable Storage'"
+  win_shell: "AuditPol /get /subsection:'Removable Storage'"
   register: removable_storage_failures_audit
   check_mode: no
   changed_when: no
@@ -4104,7 +4104,7 @@
       - V-36667
 
 - name: "MEDIUM | V-36667 | PATCH | The system must be configured to audit Object Access - Removable Storage failures."
-  win_shell: AuditPol /set /subcategory:"Removable Storage" /failure:enable
+  win_shell: AuditPol /set /subsection:"Removable Storage" /failure:enable
   when: "'Failure' not in removable_storage_failures_audit.stdout"
   tags:
       - cat2
@@ -4113,7 +4113,7 @@
       - V-36667
 
 - name: "MEDIUM | V-36668 | AUDIT | The system must be configured to audit Object Access - Removable Storage successes."
-  win_shell: "AuditPol /get /subcategory:'Removable Storage'"
+  win_shell: "AuditPol /get /subsection:'Removable Storage'"
   register: removable_storage_successes_audit
   check_mode: no
   changed_when: no
@@ -4124,7 +4124,7 @@
       - V-36668
 
 - name: "MEDIUM | V-36668 | PATCH | The system must be configured to audit Object Access - Removable Storage successes."
-  win_shell: AuditPol /set /subcategory:"Removable Storage" /success:enable
+  win_shell: AuditPol /set /subsection:"Removable Storage" /success:enable
   when: "'Success' not in removable_storage_successes_audit.stdout"
   tags:
       - cat2
@@ -4137,7 +4137,7 @@
   register: early_initialization_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in early_initialization_audit.stderr and early_initialization_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in early_initialization_audit.stderr and early_initialization_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4161,7 +4161,7 @@
   register: windows_store_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_store_audit.stderr and windows_store_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_store_audit.stderr and windows_store_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4185,7 +4185,7 @@
   register: copy_user_system_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in copy_user_system_audit.stderr and copy_user_system_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in copy_user_system_audit.stderr and copy_user_system_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4209,7 +4209,7 @@
   register: local_domain_joined_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in local_domain_joined_audit.stderr and local_domain_joined_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in local_domain_joined_audit.stderr and local_domain_joined_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4233,7 +4233,7 @@
   register: app_notifications_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in app_notifications_audit.stderr and app_notifications_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in app_notifications_audit.stderr and app_notifications_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4257,7 +4257,7 @@
   register: biometrics_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in biometrics_audit.stderr and biometrics_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in biometrics_audit.stderr and biometrics_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4281,7 +4281,7 @@
   register: password_reveal_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in password_reveal_audit.stderr and password_reveal_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in password_reveal_audit.stderr and password_reveal_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4305,7 +4305,7 @@
   register: location_feature_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in location_feature_audit.stderr and location_feature_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in location_feature_audit.stderr and location_feature_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4329,7 +4329,7 @@
   register: authentication_rss_http_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in authentication_rss_http_audit.stderr and authentication_rss_http_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in authentication_rss_http_audit.stderr and authentication_rss_http_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4353,7 +4353,7 @@
   register: windows_store_app_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_store_app_audit.stderr and windows_store_app_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_store_app_audit.stderr and windows_store_app_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4377,7 +4377,7 @@
   register: winrm_unencrypted_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in winrm_unencrypted_audit.stderr and winrm_unencrypted_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in winrm_unencrypted_audit.stderr and winrm_unencrypted_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4401,7 +4401,7 @@
   register: winrm_digest_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in winrm_digest_audit.stderr and winrm_digest_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in winrm_digest_audit.stderr and winrm_digest_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4425,7 +4425,7 @@
   register: winrm_unencrypted_traffic_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in winrm_unencrypted_traffic_audit.stderr and winrm_unencrypted_traffic_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in winrm_unencrypted_traffic_audit.stderr and winrm_unencrypted_traffic_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4449,7 +4449,7 @@
   register: winrm_store_runas_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in winrm_store_runas_audit.stderr and winrm_store_runas_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in winrm_store_runas_audit.stderr and winrm_store_runas_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4473,7 +4473,7 @@
   register: eventlog_permissions_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in eventlog_permissions_audit.stderr and eventlog_permissions_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in eventlog_permissions_audit.stderr and eventlog_permissions_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4485,7 +4485,7 @@
   register: eventlog_permissions_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in eventlog_permissions_audit.stderr and eventlog_permissions_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in eventlog_permissions_audit.stderr and eventlog_permissions_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4526,7 +4526,7 @@
           path: 'C:\WINDOWS\SYSTEM32\WINEVT\LOGS\Application.evtx'
           state: 'absent'
    
-  when: "path_not_found not in eventlog_permissions_audit.stderr and eventlog_permissions_audit"
+  when: "cPATH_NOT_FOUND not in eventlog_permissions_audit.stderr and eventlog_permissions_audit"
   tags:
       - cat2
       - medium
@@ -4539,7 +4539,7 @@
   register: security_evtx_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in security_evtx_audit.stderr and security_evtx_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in security_evtx_audit.stderr and security_evtx_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4551,7 +4551,7 @@
   register: security_evtx_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in security_evtx_audit.stderr and security_evtx_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in security_evtx_audit.stderr and security_evtx_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4592,7 +4592,7 @@
           path: 'C:\WINDOWS\SYSTEM32\WINEVT\LOGS\Security.evtx'
           state: 'absent'
      
-  when: "path_not_found not in security_evtx_audit.stderr and security_evtx_audit"
+  when: "cPATH_NOT_FOUND not in security_evtx_audit.stderr and security_evtx_audit"
   tags:
       - cat2
       - medium
@@ -4605,7 +4605,7 @@
   register: system_evtx_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in system_evtx_audit.stderr and system_evtx_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in system_evtx_audit.stderr and system_evtx_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4617,7 +4617,7 @@
   register: system_evtx_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in system_evtx_audit.stderr and system_evtx_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in system_evtx_audit.stderr and system_evtx_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4659,7 +4659,7 @@
           path: 'C:\WINDOWS\SYSTEM32\WINEVT\LOGS\System.evtx'
           state: 'absent'
    
-  when: "path_not_found not in system_evtx_audit.stderr and system_evtx_audit"
+  when: "cPATH_NOT_FOUND not in system_evtx_audit.stderr and system_evtx_audit"
   tags:
       - cat2
       - medium
@@ -4672,7 +4672,7 @@
   register: inactivity_limit_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in inactivity_limit_audit.stderr and inactivity_limit_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in inactivity_limit_audit.stderr and inactivity_limit_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4696,7 +4696,7 @@
   register: program_files_minimum_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in program_files_minimum_audit.stderr and program_files_minimum_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in program_files_minimum_audit.stderr and program_files_minimum_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4708,7 +4708,7 @@
   register: program_files_minimum_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in program_files_minimum_audit.stderr and program_files_minimum_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in program_files_minimum_audit.stderr and program_files_minimum_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4720,7 +4720,7 @@
   register: program_filesx86_minimum_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in program_filesx86_minimum_audit.stderr and program_filesx86_minimum_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in program_filesx86_minimum_audit.stderr and program_filesx86_minimum_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4732,7 +4732,7 @@
   register: program_filesx86_minimum_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in program_filesx86_minimum_audit.stderr and program_filesx86_minimum_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in program_filesx86_minimum_audit.stderr and program_filesx86_minimum_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4860,7 +4860,7 @@
           - '\Program Files'
           - '\Program Files (x86)'
    
-  when: "path_not_found not in (program_files_minimum_audit.stderr and program_filesx86_minimum_audit.stderr) and program_files_minimum_audit and program_filesx86_minimum_audit"
+  when: "cPATH_NOT_FOUND not in (program_files_minimum_audit.stderr and program_filesx86_minimum_audit.stderr) and program_files_minimum_audit and program_filesx86_minimum_audit"
   tags:
       - cat2
       - medium
@@ -4873,7 +4873,7 @@
   register: root_permissions_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in root_permissions_audit.stderr and root_permissions_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in root_permissions_audit.stderr and root_permissions_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4885,7 +4885,7 @@
   register: root_permissions_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in root_permissions_audit.stderr and root_permissions_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in root_permissions_audit.stderr and root_permissions_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4947,7 +4947,7 @@
           path: 'C:'
           state: 'absent'
    
-  when: "path_not_found not in root_permissions_audit.stderr and root_permissions_audit"
+  when: "cPATH_NOT_FOUND not in root_permissions_audit.stderr and root_permissions_audit"
   tags:
       - cat2
       - medium
@@ -4960,7 +4960,7 @@
   register: windows_installation_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_installation_audit.stderr and windows_installation_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_installation_audit.stderr and windows_installation_audit.stderr"
   tags:
       - cat2
       - medium
@@ -4972,7 +4972,7 @@
   register: windows_installation_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in windows_installation_audit.stderr and windows_installation_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in windows_installation_audit.stderr and windows_installation_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5038,7 +5038,7 @@
           path: 'C:\Windows'
           state: 'absent'
    
-  when: "path_not_found not in windows_installation_audit.stderr and windows_installation_audit"
+  when: "cPATH_NOT_FOUND not in windows_installation_audit.stderr and windows_installation_audit"
   tags:
       - cat2
       - medium
@@ -5047,7 +5047,7 @@
 ######################################### block end #####################################################
 
 - name: "MEDIUM | V-40200 | AUDIT | The system must be configured to audit Object Access - Central Access Policy Staging failures."
-  win_shell: "AuditPol /get /subcategory:'Central Policy Staging'"
+  win_shell: "AuditPol /get /subsection:'Central Policy Staging'"
   register: central_access_failure_audit
   check_mode: no
   changed_when: no
@@ -5058,7 +5058,7 @@
       - V-40200
 
 - name: "MEDIUM | V-40200 | PATCH | The system must be configured to audit Object Access - Central Access Policy Staging failures."
-  win_shell: AuditPol /set /subcategory:"Central Policy Staging" /failure:enable
+  win_shell: AuditPol /set /subsection:"Central Policy Staging" /failure:enable
   when: "'Failure' not in central_access_failure_audit.stdout"
   tags:
       - cat2
@@ -5067,7 +5067,7 @@
       - V-40200
 
 - name: "MEDIUM | V-40202 | AUDIT | The system must be configured to audit Object Access - Central Access Policy Staging successes."
-  win_shell: "AuditPol /get /subcategory:'Central Policy Staging'"
+  win_shell: "AuditPol /get /subsection:'Central Policy Staging'"
   register: central_access_success_audit
   check_mode: no
   changed_when: no
@@ -5078,7 +5078,7 @@
       - V-40202
 
 - name: "MEDIUM | V-40202 | PATCH | The system must be configured to audit Object Access - Central Access Policy Staging successes."
-  win_shell: AuditPol /set /subcategory:"Central Policy Staging" /success:enable
+  win_shell: AuditPol /set /subsection:"Central Policy Staging" /success:enable
   when: "'Success' not in central_access_success_audit.stdout"
   tags:
       - cat2
@@ -5091,7 +5091,7 @@
   register: display_lock_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in display_lock_audit.stderr and display_lock_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in display_lock_audit.stderr and display_lock_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5115,7 +5115,7 @@
   register: prevented_process_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in prevented_process_audit.stderr and prevented_process_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in prevented_process_audit.stderr and prevented_process_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5139,7 +5139,7 @@
   register: network_selection_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in network_selection_audit.stderr and network_selection_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in network_selection_audit.stderr and network_selection_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5163,7 +5163,7 @@
   register: automatic_restart_signin_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in automatic_restart_signin_audit.stderr and automatic_restart_signin_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in automatic_restart_signin_audit.stderr and automatic_restart_signin_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5209,7 +5209,7 @@
   register: multiple_error_reports_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in multiple_error_reports_audit.stderr and multiple_error_reports_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in multiple_error_reports_audit.stderr and multiple_error_reports_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5233,7 +5233,7 @@
   register: error_message_audit
   check_mode: no
   changed_when: no
-  failed_when: "error_message_audit.stderr and reg_not_found not in error_message_audit.stderr"
+  failed_when: "error_message_audit.stderr and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5257,7 +5257,7 @@
   register: error_message_audit
   check_mode: no
   changed_when: no
-  failed_when: "error_message_audit.stderr and reg_not_found not in error_message_audit.stderr"
+  failed_when: "error_message_audit.stderr and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5284,7 +5284,7 @@
   register: error_message_audit
   check_mode: no
   changed_when: no
-  failed_when: "error_message_audit.stderr and reg_not_found not in error_message_audit.stderr"
+  failed_when: "error_message_audit.stderr and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5298,7 +5298,7 @@
       value: CorporateWerUseSSL
       data: 1
       datatype: dword
-  when: "'CorporateWerServer    REG_SZ     \\r' not in error_message_audit.stdout and reg_not_found not in error_message_audit.stderr"
+  when: "'CorporateWerServer    REG_SZ     \\r' not in error_message_audit.stdout and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5311,7 +5311,7 @@
   register: error_message_audit
   check_mode: no
   changed_when: no
-  failed_when: "error_message_audit.stderr and reg_not_found not in error_message_audit.stderr"
+  failed_when: "error_message_audit.stderr and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5324,8 +5324,8 @@
   register: error_message_port_audit
   check_mode: no
   changed_when: no
-  failed_when: "error_message_port_audit.stderr and reg_not_found not in error_message_port_audit.stderr"
-  when: "'CorporateWerServer    REG_SZ     \\r' not in error_message_audit.stdout and reg_not_found not in error_message_audit.stderr"
+  failed_when: "error_message_port_audit.stderr and cREG_NOT_FOUND not in error_message_port_audit.stderr"
+  when: "'CorporateWerServer    REG_SZ     \\r' not in error_message_audit.stdout and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5339,7 +5339,7 @@
       value: CorporateWerPortNumber
       data: 0x000004d0
       datatype: dword
-  when: "'CorporateWerServer    REG_SZ     \\r' not in error_message_audit.stdout and reg_not_found not in error_message_audit.stderr"
+  when: "'CorporateWerServer    REG_SZ     \\r' not in error_message_audit.stdout and cREG_NOT_FOUND not in error_message_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5351,7 +5351,7 @@
   register: disable_archive_audit
   check_mode: no
   changed_when: no
-  failed_when: "disable_archive_audit.stderr and reg_not_found not in disable_archive_audit.stderr"
+  failed_when: "disable_archive_audit.stderr and cREG_NOT_FOUND not in disable_archive_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5375,7 +5375,7 @@
   register: archive_error_reports_audit
   check_mode: no
   changed_when: no
-  failed_when: "archive_error_reports_audit.stderr and reg_not_found not in archive_error_reports_audit.stderr"
+  failed_when: "archive_error_reports_audit.stderr and cREG_NOT_FOUND not in archive_error_reports_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5399,7 +5399,7 @@
   register: max_achive_count_audit
   check_mode: no
   changed_when: no
-  failed_when: "max_achive_count_audit.stderr and reg_not_found not in max_achive_count_audit.stderr"
+  failed_when: "max_achive_count_audit.stderr and cREG_NOT_FOUND not in max_achive_count_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5423,7 +5423,7 @@
   register: disable_queue_audit
   check_mode: no
   changed_when: no
-  failed_when: "disable_queue_audit.stderr and reg_not_found not in disable_queue_audit.stderr"
+  failed_when: "disable_queue_audit.stderr and cREG_NOT_FOUND not in disable_queue_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5447,7 +5447,7 @@
   register: force_queue_audit
   check_mode: no
   changed_when: no
-  failed_when: "force_queue_audit.stderr and reg_not_found not in force_queue_audit.stderr"
+  failed_when: "force_queue_audit.stderr and cREG_NOT_FOUND not in force_queue_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5471,7 +5471,7 @@
   register: max_queue_audit
   check_mode: no
   changed_when: no
-  failed_when: "max_queue_audit.stderr and reg_not_found not in max_queue_audit.stderr"
+  failed_when: "max_queue_audit.stderr and cREG_NOT_FOUND not in max_queue_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5495,7 +5495,7 @@
   register: daily_forward_audit
   check_mode: no
   changed_when: no
-  failed_when: "daily_forward_audit.stderr and reg_not_found not in daily_forward_audit.stderr"
+  failed_when: "daily_forward_audit.stderr and cREG_NOT_FOUND not in daily_forward_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5519,7 +5519,7 @@
   register: default_consent_audit
   check_mode: no
   changed_when: no
-  failed_when: "default_consent_audit.stderr and reg_not_found not in default_consent_audit.stderr"
+  failed_when: "default_consent_audit.stderr and cREG_NOT_FOUND not in default_consent_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5543,7 +5543,7 @@
   register: override_audit
   check_mode: no
   changed_when: no
-  failed_when: "override_audit.stderr and reg_not_found not in override_audit.stderr"
+  failed_when: "override_audit.stderr and cREG_NOT_FOUND not in override_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5563,7 +5563,7 @@
       - V-57479
 
 - name: "MEDIUM | V-57633 | AUDIT | The system must be configured to audit Policy Change - Authorization Policy Change successes."
-  win_shell: "AuditPol /get /subcategory:'Authorization Policy Change'"
+  win_shell: "AuditPol /get /subsection:'Authorization Policy Change'"
   register: auth_policy_successes_audit
   check_mode: no
   changed_when: no
@@ -5574,7 +5574,7 @@
       - V-57633
 
 - name: "MEDIUM | V-57633 | PATCH | The system must be configured to audit Policy Change - Authorization Policy Change successes."
-  win_shell: AuditPol /set /subcategory:"Authorization Policy Change" /success:enable
+  win_shell: AuditPol /set /subsection:"Authorization Policy Change" /success:enable
   when: "'Success' not in auth_policy_successes_audit.stdout"
   tags:
       - cat2
@@ -5583,7 +5583,7 @@
       - V-57633
 
 - name: "MEDIUM | V-57635 | AUDIT | The system must be configured to audit Policy Change - Authorization Policy Change failures."
-  win_shell: "AuditPol /get /subcategory:'Authorization Policy Change'"
+  win_shell: "AuditPol /get /subsection:'Authorization Policy Change'"
   register: auth_policy_failures_audit
   check_mode: no
   changed_when: no
@@ -5594,7 +5594,7 @@
       - V-57635
 
 - name: "MEDIUM | V-57635 | PATCH | The system must be configured to audit Policy Change - Authorization Policy Change failures."
-  win_shell: AuditPol /set /subcategory:"Authorization Policy Change" /failure:enable
+  win_shell: AuditPol /set /subsection:"Authorization Policy Change" /failure:enable
   when: "'Failure' not in auth_policy_failures_audit.stdout"
   tags:
       - cat2
@@ -5607,7 +5607,7 @@
   register: password_private_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in password_private_audit.stderr and password_private_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in password_private_audit.stderr and password_private_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5631,7 +5631,7 @@
   register: event_viewer_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in event_viewer_audit.stderr and event_viewer_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in event_viewer_audit.stderr and event_viewer_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5643,7 +5643,7 @@
   register: event_viewer_audit
   check_mode: no
   changed_when: no
-  failed_when: "path_not_found not in event_viewer_audit.stderr and event_viewer_audit.stderr"
+  failed_when: "cPATH_NOT_FOUND not in event_viewer_audit.stderr and event_viewer_audit.stderr"
   tags:
       - cat2
       - medium
@@ -5697,7 +5697,7 @@
           path: 'C:\Windows\System32\Eventvwr.exe'
           state: absent
    
-  when: "path_not_found not in event_viewer_audit.stderr and event_viewer_audit"
+  when: "cPATH_NOT_FOUND not in event_viewer_audit.stderr and event_viewer_audit"
   tags:
       - cat2
       - medium

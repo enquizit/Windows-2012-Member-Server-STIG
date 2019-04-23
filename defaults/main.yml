@@ -1,8 +1,12 @@
 ---
-reg_not_found: "ERROR: The system was unable to find the specified registry key or value"
+min_ansible_version: 2.4
 
-service_not_found: 'Cannot find any service with'
+# Enable or disable remediation for each category
+apply_cat1: yes
+apply_cat2: no
+apply_cat3: no
 
-path_not_found: 'PathNotFound_Exception'
-
-path_is_null: "Cannot validate argument on parameter 'Path'. The argument is null"
+cREG_NOT_FOUND: 'ERROR: The system was unable to find the specified registry key or value'
+cSERVICE_NOT_FOUND: 'Cannot find any service with'
+cPATH_NOT_FOUND: 'PathNotFound_Exception'
+cPATH_IS_NULL: "Cannot validate argument on parameter 'Path'. The argument is null"

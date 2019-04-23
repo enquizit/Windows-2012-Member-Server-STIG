@@ -3,7 +3,7 @@
   register: shutdown_button_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in shutdown_button_audit.stderr and shutdown_button_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in shutdown_button_audit.stderr and shutdown_button_audit.stderr"
   tags:
       - cat3
       - low
@@ -27,7 +27,7 @@
   register: cached_logons_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in cached_logons_audit.stderr and cached_logons_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in cached_logons_audit.stderr and cached_logons_audit.stderr"
   tags:
       - cat3
       - low
@@ -61,7 +61,7 @@
   register: add_printer_driver_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in add_printer_driver_audit.stderr and add_printer_driver_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in add_printer_driver_audit.stderr and add_printer_driver_audit.stderr"
   tags:
       - cat3
       - low
@@ -85,7 +85,7 @@
   register: set_command_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in set_command_audit.stderr and set_command_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in set_command_audit.stderr and set_command_audit.stderr"
   tags:
       - cat3
       - low
@@ -109,7 +109,7 @@
   register: disable_password_change_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_password_change_audit.stderr and disable_password_change_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_password_change_audit.stderr and disable_password_change_audit.stderr"
   tags:
       - cat3
       - low
@@ -133,7 +133,7 @@
   register: password_expiry_warning_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in password_expiry_warning_audit.stderr and password_expiry_warning_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in password_expiry_warning_audit.stderr and password_expiry_warning_audit.stderr"
   tags:
       - cat3
       - low
@@ -157,7 +157,7 @@
   register: protection_mode_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in protection_mode_audit.stderr and protection_mode_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in protection_mode_audit.stderr and protection_mode_audit.stderr"
   tags:
       - cat3
       - low
@@ -181,7 +181,7 @@
   register: auto_disconnect_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in auto_disconnect_audit.stderr and auto_disconnect_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in auto_disconnect_audit.stderr and auto_disconnect_audit.stderr"
   tags:
       - cat3
       - low
@@ -205,7 +205,7 @@
   register: max_password_age_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in max_password_age_audit.stderr and max_password_age_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in max_password_age_audit.stderr and max_password_age_audit.stderr"
   tags:
       - cat3
       - low
@@ -229,7 +229,7 @@
   register: time_type_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in time_type_audit.stderr and time_type_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in time_type_audit.stderr and time_type_audit.stderr"
   tags:
       - cat3
       - low
@@ -241,7 +241,7 @@
   register: NTP_server_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in NTP_server_audit.stderr and NTP_server_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in NTP_server_audit.stderr and NTP_server_audit.stderr"
   tags:
       - cat3
       - low
@@ -253,7 +253,7 @@
   register: disable_ip_routing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_ip_routing_audit.stderr and disable_ip_routing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_ip_routing_audit.stderr and disable_ip_routing_audit.stderr"
   tags:
       - cat3
       - low
@@ -277,7 +277,7 @@
   register: disable_IRDP_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in disable_IRDP_audit.stderr and disable_IRDP_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in disable_IRDP_audit.stderr and disable_IRDP_audit.stderr"
   tags:
       - cat3
       - low
@@ -301,7 +301,7 @@
   register: keep_alive_time_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in keep_alive_time_audit.stderr and keep_alive_time_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in keep_alive_time_audit.stderr and keep_alive_time_audit.stderr"
   tags:
       - cat3
       - low
@@ -325,7 +325,7 @@
   register: name_release_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in name_release_audit.stderr and name_release_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in name_release_audit.stderr and name_release_audit.stderr"
   tags:
       - cat3
       - low
@@ -349,7 +349,7 @@
   register: max_TCP_retransmit_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in max_TCP_retransmit_audit.stderr and max_TCP_retransmit_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in max_TCP_retransmit_audit.stderr and max_TCP_retransmit_audit.stderr"
   tags:
       - cat3
       - low
@@ -373,7 +373,7 @@
   register: screen_saver_password_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in screen_saver_password_audit.stderr and screen_saver_password_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in screen_saver_password_audit.stderr and screen_saver_password_audit.stderr"
   tags:
       - cat3
       - low
@@ -397,7 +397,7 @@
   register: optional_subsystem_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in optional_subsystem_audit.stderr and optional_subsystem_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in optional_subsystem_audit.stderr and optional_subsystem_audit.stderr"
   tags:
       - cat3
       - low
@@ -417,7 +417,7 @@
   register: last_name_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in last_name_audit.stderr and last_name_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in last_name_audit.stderr and last_name_audit.stderr"
   tags:
       - cat3
       - low
@@ -441,7 +441,7 @@
   register: event_viewer_links_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in event_viewer_links_audit.stderr and event_viewer_links_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in event_viewer_links_audit.stderr and event_viewer_links_audit.stderr"
   tags:
       - cat3
       - low
@@ -465,7 +465,7 @@
   register: classic_logon_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in classic_logon_audit.stderr and classic_logon_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in classic_logon_audit.stderr and classic_logon_audit.stderr"
   tags:
       - cat3
       - low
@@ -489,7 +489,7 @@
   register: diable_user_patching_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in diable_user_patching_audit.stderr and diable_user_patching_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in diable_user_patching_audit.stderr and diable_user_patching_audit.stderr"
   tags:
       - cat3
       - low
@@ -513,7 +513,7 @@
   register: group_privacy_acceptance_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in group_privacy_acceptance_audit.stderr and group_privacy_acceptance_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in group_privacy_acceptance_audit.stderr and group_privacy_acceptance_audit.stderr"
   tags:
       - cat3
       - low
@@ -537,7 +537,7 @@
   register: restore_point_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in restore_point_audit.stderr and restore_point_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in restore_point_audit.stderr and restore_point_audit.stderr"
   tags:
       - cat3
       - low
@@ -561,7 +561,7 @@
   register: no_error_report_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in no_error_report_audit.stderr and no_error_report_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in no_error_report_audit.stderr and no_error_report_audit.stderr"
   tags:
       - cat3
       - low
@@ -585,7 +585,7 @@
   register: no_prompt_windows_update_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in no_prompt_windows_update_audit.stderr and no_prompt_windows_update_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in no_prompt_windows_update_audit.stderr and no_prompt_windows_update_audit.stderr"
   tags:
       - cat3
       - low
@@ -609,7 +609,7 @@
   register: no_handwriting_error_reports_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in no_handwriting_error_reports_audit.stderr and no_handwriting_error_reports_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in no_handwriting_error_reports_audit.stderr and no_handwriting_error_reports_audit.stderr"
   tags:
       - cat3
       - low
@@ -645,7 +645,7 @@
   register: heap_termination_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in heap_termination_audit.stderr and heap_termination_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in heap_termination_audit.stderr and heap_termination_audit.stderr"
   tags:
       - cat3
       - low
@@ -669,7 +669,7 @@
   register: failed_cached_logon_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in failed_cached_logon_audit.stderr and failed_cached_logon_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in failed_cached_logon_audit.stderr and failed_cached_logon_audit.stderr"
   tags:
       - cat3
       - low
@@ -693,7 +693,7 @@
   register: no_disconnect_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in no_disconnect_audit.stderr and no_disconnect_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in no_disconnect_audit.stderr and no_disconnect_audit.stderr"
   tags:
       - cat3
       - low
@@ -717,7 +717,7 @@
   register: IPv6_source_routing_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in IPv6_source_routing_audit.stderr and IPv6_source_routing_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in IPv6_source_routing_audit.stderr and IPv6_source_routing_audit.stderr"
   tags:
       - cat3
       - low
@@ -741,7 +741,7 @@
   register: IPv6_retransmit_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in IPv6_retransmit_audit.stderr and IPv6_retransmit_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in IPv6_retransmit_audit.stderr and IPv6_retransmit_audit.stderr"
   tags:
       - cat3
       - low
@@ -765,7 +765,7 @@
   register: elevate_setting_network_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in elevate_setting_network_audit.stderr and elevate_setting_network_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in elevate_setting_network_audit.stderr and elevate_setting_network_audit.stderr"
   tags:
       - cat3
       - low
@@ -789,7 +789,7 @@
   register: force_tunneling_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in force_tunneling_audit.stderr and force_tunneling_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in force_tunneling_audit.stderr and force_tunneling_audit.stderr"
   tags:
       - cat3
       - low
@@ -801,7 +801,7 @@
   register: windows_update_search_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_update_search_audit.stderr and windows_update_search_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_update_search_audit.stderr and windows_update_search_audit.stderr"
   tags:
       - cat3
       - low
@@ -825,7 +825,7 @@
   register: device_metadata_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in device_metadata_audit.stderr and device_metadata_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in device_metadata_audit.stderr and device_metadata_audit.stderr"
   tags:
       - cat3
       - low
@@ -849,7 +849,7 @@
   register: windows_update_device_driver_search_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_update_device_driver_search_audit.stderr and windows_update_device_driver_search_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_update_device_driver_search_audit.stderr and windows_update_device_driver_search_audit.stderr"
   tags:
       - cat3
       - low
@@ -873,7 +873,7 @@
   register: MSDT_communication_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in MSDT_communication_audit.stderr and MSDT_communication_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in MSDT_communication_audit.stderr and MSDT_communication_audit.stderr"
   tags:
       - cat3
       - low
@@ -897,7 +897,7 @@
   register: WOTS_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in WOTS_audit.stderr and WOTS_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in WOTS_audit.stderr and WOTS_audit.stderr"
   tags:
       - cat3
       - low
@@ -921,7 +921,7 @@
   register: WOTS_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in WOTS_audit.stderr and WOTS_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in WOTS_audit.stderr and WOTS_audit.stderr"
   tags:
       - cat3
       - low
@@ -945,7 +945,7 @@
   register: ACPI_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in ACPI_audit.stderr and ACPI_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in ACPI_audit.stderr and ACPI_audit.stderr"
   tags:
       - cat3
       - low
@@ -977,8 +977,8 @@
 # Well-known security identifiers in Windows operating systems
 # https://support.microsoft.com/en-us/kb/243330
 - name: "LOW | V-26475 | PATCH | Unauthorized accounts must not have the Bypass traverse checking user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeChangeNotifyPrivilege
       value: '*S-1-5-11,*S-1-5-19,*S-1-5-20,*S-1-5-32-544' #Authenticated Users, Local Service, Network Service, Administrators
   register: secedit
@@ -1000,8 +1000,8 @@
       - V-26477
 
 - name: "LOW | V-26477 | PATCH | Unauthorized accounts must not have the Change the time zone user right."
-  win_secedit:
-      category: 'Privilege Rights'
+  win_security_policy:
+      section: 'Privilege Rights'
       key: SeTimeZonePrivilege
       value: '*S-1-5-19,*S-1-5-32-544' #Local Service, Administrators
   register: secedit
@@ -1017,7 +1017,7 @@
   register: send_error_report_audit
   check_mode: no
   changed_when: no
-  failed_when: "send_error_report_audit.stderr and reg_not_found not in send_error_report_audit.stderr"
+  failed_when: "send_error_report_audit.stderr and cREG_NOT_FOUND not in send_error_report_audit.stderr"
   tags:
       - cat3
       - low
@@ -1041,7 +1041,7 @@
   register: ip_config_limits_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in ip_config_limits_audit.stderr and ip_config_limits_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in ip_config_limits_audit.stderr and ip_config_limits_audit.stderr"
   tags:
       - cat3
       - low
@@ -1065,7 +1065,7 @@
   register: optional_install_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in optional_install_audit.stderr and optional_install_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in optional_install_audit.stderr and optional_install_audit.stderr"
   tags:
       - cat3
       - low
@@ -1089,7 +1089,7 @@
   register: search_managed_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in search_managed_audit.stderr and search_managed_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in search_managed_audit.stderr and search_managed_audit.stderr"
   tags:
       - cat3
       - low
@@ -1113,7 +1113,7 @@
   register: detection_compatibility_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in detection_compatibility_audit.stderr and detection_compatibility_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in detection_compatibility_audit.stderr and detection_compatibility_audit.stderr"
   tags:
       - cat3
       - low
@@ -1137,7 +1137,7 @@
   register: trusted_app_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in trusted_app_audit.stderr and trusted_app_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in trusted_app_audit.stderr and trusted_app_audit.stderr"
   tags:
       - cat3
       - low
@@ -1161,7 +1161,7 @@
   register: smartscreen_off_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in smartscreen_off_audit.stderr and smartscreen_off_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in smartscreen_off_audit.stderr and smartscreen_off_audit.stderr"
   tags:
       - cat3
       - low
@@ -1185,7 +1185,7 @@
   register: auto_download_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in auto_download_audit.stderr and auto_download_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in auto_download_audit.stderr and auto_download_audit.stderr"
   tags:
       - cat3
       - low
@@ -1209,7 +1209,7 @@
   register: screen_saver_disabled_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in screen_saver_disabled_audit.stderr and screen_saver_disabled_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in screen_saver_disabled_audit.stderr and screen_saver_disabled_audit.stderr"
   tags:
       - cat3
       - low
@@ -1233,7 +1233,7 @@
   register: screen_change_prevent_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in screen_change_prevent_audit.stderr and screen_change_prevent_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in screen_change_prevent_audit.stderr and screen_change_prevent_audit.stderr"
   tags:
       - cat3
       - low
@@ -1257,7 +1257,7 @@
   register: windows_push_notify_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in windows_push_notify_audit.stderr and windows_push_notify_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in windows_push_notify_audit.stderr and windows_push_notify_audit.stderr"
   tags:
       - cat3
       - low
@@ -1281,7 +1281,7 @@
   register: toast_notifications_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in toast_notifications_audit.stderr and toast_notifications_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in toast_notifications_audit.stderr and toast_notifications_audit.stderr"
   tags:
       - cat3
       - low
@@ -1305,7 +1305,7 @@
   register: modern_style_audit
   check_mode: no
   changed_when: no
-  failed_when: "reg_not_found not in modern_style_audit.stderr and modern_style_audit.stderr"
+  failed_when: "cREG_NOT_FOUND not in modern_style_audit.stderr and modern_style_audit.stderr"
   tags:
       - cat3
       - low
